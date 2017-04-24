@@ -46,8 +46,9 @@ To produce the above, which is truly the uneventful and minimal way to go for a 
     :ratom ratom
     :svg   {:did-mount (fn [node _]
                          (-> node
-                             (.attr "width" 900)
-                             (.attr "height" 500)))}
+                             (.attr "width" 100)
+                             (.attr "height" 100)
+                             (.style "background-color" "lightgrey")))}
     }])
 ```
 
@@ -76,16 +77,22 @@ Our updated viz component looks like this:
     :ratom ratom
     :svg   {:did-mount (fn [node _]
                          (-> node
-                             (.attr "width" 900)
-                             (.attr "height" 500)))}
+                             (.attr "width" 100)
+                             (.attr "height" 100)
+                             (.style "background-color" "lightgrey")))}
     :pieces
     [{:kind      :elem
       :class     "label"
       :tag       "text"
       :did-mount (fn [node _]
                    (-> node
+                       (.attr "x" 50)
+                       (.attr "y" 50)
+                       (.attr "text-anchor" "middle")
+                       (.attr "alignment-baseline" "middle")
                        (.attr "fill" "green")
                        (.attr "font-size" "24px")
+                       (.attr "font-family" "sans-serif")
                        (.text "RID3")))}]
     }])
 ```
