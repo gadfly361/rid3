@@ -14,7 +14,7 @@ To use rid3, add the following to the `:dependencies` vector in your project.clj
 
 ## The Problem
 
-In my experience, there is a lot of boilerplate involved when trying to get reagent (i.e., react) and d3 to play nicely together.  The crux of the problem is you only want to append containing g tags to the DOM during reagent's `component-did-mount` lifecycle method and not during the `component-did-update` lifecycle method. However, more often than not, you want d3 to modify the stuff contained in the g tag in the same manner whether or not the component just mounted or just updated.
+In my experience, there is a lot of boilerplate involved when trying to get reagent (i.e., react) and d3 to play nicely together.  The crux of the problem is you only want to append containing g tags (or static elements) to the DOM during reagent's `component-did-mount` lifecycle method and not during the `component-did-update` lifecycle method. However, more often than not, you want d3 to modify the stuff contained in the g tag in the same manner whether or not the component just mounted or just updated.
 
 ## Rid3's Solution
 
@@ -118,10 +118,10 @@ So `pieces` takes a vector of objects.  There are four kinds of objects:
 	    - defaults to did-mount
 	- children --> [ pieces ]
 - `raw` for when you want to either trigger some side-effect or have an escape hatch from the rid3
-    - kind (:raw)
-	- class
-	- did-mount (fn [ratom] ... )
-	- did-update (fn [ratom] ... )]
+    - kind --> :raw
+	- class --> string
+	- did-mount --> (fn [ratom] ... )
+	- did-update --> (fn [ratom] ... )]
 	    - no default
 
 In this example, we:
