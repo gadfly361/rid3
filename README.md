@@ -126,7 +126,7 @@ So `pieces` takes a vector of obects.  There are four kinds of objects:
 
 In this example, we:
 - used an `elem` piece
-- definded a class ("text") for the containing g tag
+- definded a class ("label") for the containing g tag
 - defined the tag ("text") of the elment we want to add inside the containing g tag
 
 We also added a `did-mount` function.  This is what will work on the `text` element.  As you can see, `did-mount` takes two arguments, the first is the DOM node and the second is the ratom we defined earlier.
