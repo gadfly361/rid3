@@ -90,9 +90,9 @@ Our updated viz component looks like this:
     }])
 ```
 
-So `pieces` takes a vector of obects.  There are four kinds of objects:
+So `pieces` takes a vector of objects.  There are four kinds of objects:
 
-- `elem` which is when you want to add an element to your main container like a text or a circle.
+- `elem` for when you want to add an element to your main container like a text or a circle.
     - kind --> :elem
 	- class --> string
 	- tag --> "text", "circle", etc
@@ -100,7 +100,7 @@ So `pieces` takes a vector of obects.  There are four kinds of objects:
 	- did-update -->  (fn [node ratom] ... )
 	    - defaults to did-mount
 	- children --> [ pieces ]
-- `elem-with-data` which is when you want to add a series of elements that are joined to a dataset
+- `elem-with-data` for when you want to add a series of elements that are joined to a dataset
     - kind --> :elem-with-data
 	- class --> string
 	- prepare-dataset --> (fn [ratom] ... )
@@ -110,14 +110,14 @@ So `pieces` takes a vector of obects.  There are four kinds of objects:
 	- did-update -->  (fn [node ratom] ... )
 	    - defaults to did-mount
 	- children --> [ pieces ]
-- `container` which is when you want to group *elem* or *elem-with-data*'s together.
+- `container` for when you want to group *elem* or *elem-with-data*'s together.
     - kind --> :container
 	- class --> string
 	- did-mount --> (fn [node ratom] ... )
 	- did-update -->  (fn [node ratom] ... )
 	    - defaults to did-mount
 	- children --> [ pieces ]
-- `raw` which is when you want to either trigger some side-effect or have an escape hatch from the rid3
+- `raw` for when you want to either trigger some side-effect or have an escape hatch from the rid3
     - kind (:raw)
 	- class
 	- did-mount (fn [ratom] ... )

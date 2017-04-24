@@ -22,7 +22,7 @@
     :app {:page-width nil}
 
     :arc-tween {}
-    :barchart  barchart/viz-map
+    :barchart  {:dataset barchart/dataset}
     :barchart2 {:dataset barchart2/dataset}
     :barchart3 {:dataset barchart3/dataset}
     :pie       {:dataset pie/dataset}

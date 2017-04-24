@@ -203,11 +203,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; data
 
-(def viz-map
-  {:width   300
-   :dataset [{:x 5}
-             {:x 2}
-             {:x 3}]})
+(def dataset
+  [{:x 5}
+   {:x 2}
+   {:x 3}])
 
 (defn randomize-dataset [ratom]
   (let [points-n (max 2 (rand-int 8))
