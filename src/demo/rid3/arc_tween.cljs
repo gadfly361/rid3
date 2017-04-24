@@ -143,6 +143,6 @@
 
 (defn example [ratom]
   [:div
-   [dutil/title "Arch Tween" "arc_tween"]
+   [dutil/title "Arc Tween" "arc_tween"]
    [viz ratom]
    ])
