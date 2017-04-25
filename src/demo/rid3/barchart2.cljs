@@ -13,8 +13,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; vars
 
-(def source-link "barchart2.cljs")
-
 (def margin
   {:top    20
    :right  20
@@ -26,7 +24,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; util fns
 
-(defn get-width [ratom]
+(defn get-width
+  [ratom]
   (let [page-width (get @ratom :page-width)]
     (max (min 900
               (- page-width 100))
