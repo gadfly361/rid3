@@ -116,7 +116,6 @@ So `pieces` takes a vector of objects.  There are four kinds of objects:
 	- did-mount --> (fn [node ratom] ... )
 	- did-update -->  (fn [node ratom] ... )
 	    - defaults to did-mount
-	- children --> [ pieces ]
 - `container` for when you want to group *elem* or *elem-with-data*'s together.
     - kind --> :container
 	- class --> string
@@ -126,7 +125,6 @@ So `pieces` takes a vector of objects.  There are four kinds of objects:
 	- children --> [ pieces ]
 - `raw` for when you want to either trigger some side-effect or have an escape hatch from the rid3
     - kind --> :raw
-	- class --> string
 	- did-mount --> (fn [ratom] ... )
 	- did-update --> (fn [ratom] ... )]
 	    - no default

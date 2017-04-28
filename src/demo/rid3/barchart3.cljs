@@ -1,8 +1,6 @@
 (ns rid3.barchart3
   (:require
-   [cljs.spec :as spec]
    [garden.core :refer [css]]
-   [reagent.core :as reagent]
    [rid3.core :as d3]
    [rid3.demo-util :as dutil]
    ))

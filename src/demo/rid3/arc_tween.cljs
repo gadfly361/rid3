@@ -1,7 +1,5 @@
 (ns rid3.arc-tween
   (:require
-   [cljs.spec :as spec]
-   [reagent.core :as reagent]
    [rid3.core :as d3]
    [rid3.demo-util :as dutil]
    ))

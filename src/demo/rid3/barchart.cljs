@@ -1,7 +1,5 @@
 (ns rid3.barchart
   (:require
-   [cljs.spec :as spec]
-   [reagent.core :as reagent]
    [rid3.core :as d3]
    [rid3.demo-util :as dutil]
    ))
@@ -188,8 +186,7 @@
         :class      "bar"
         :tag        "rect"
         :did-mount  bar-did-mount
-        :did-update bar-did-update
-        }
+        :did-update bar-did-update}
 
        {:kind       :elem-with-data
         :class      "bar-label"
