@@ -97,37 +97,43 @@ Our updated viz component looks like this:
     }])
 ```
 
-So `pieces` takes a vector of objects.  There are four kinds of objects:
+So `pieces` takes a vector of piece objects.  There are four kinds of pieces:
 
-- `elem` for when you want to add an element to your main container like a text or a circle.
-    - kind --> :elem
-	- class --> string
-	- tag --> "text", "circle", etc
-	- did-mount --> (fn [node ratom] ... )
-	- did-update -->  (fn [node ratom] ... )
-	    - defaults to did-mount
-	- children --> [ pieces ]
-- `elem-with-data` for when you want to add a series of elements that are joined to a dataset
-    - kind --> :elem-with-data
-	- class --> string
-	- prepare-dataset --> (fn [ratom] ... )
-	    - defaults to: (fn [ratom] (-> @ratom (get :dataset) clj->js))
-	- tag --> "text", "circle", etc
-	- did-mount --> (fn [node ratom] ... )
-	- did-update -->  (fn [node ratom] ... )
-	    - defaults to did-mount
-- `container` for when you want to group *elem* or *elem-with-data*'s together.
-    - kind --> :container
-	- class --> string
-	- did-mount --> (fn [node ratom] ... )
-	- did-update -->  (fn [node ratom] ... )
-	    - defaults to did-mount
-	- children --> [ pieces ]
-- `raw` for when you want to either trigger some side-effect or have an escape hatch from the rid3
-    - kind --> :raw
-	- did-mount --> (fn [ratom] ... )
-	- did-update --> (fn [ratom] ... )]
-	    - no default
+- `:elem` for when you want to add an element to your main container like a text or a circle.
+
+| key        | type                  | default   | required? |
+|------------|-----------------------|-----------|-----------|
+| class      | string                |           | yes       |
+| tag        | string                |           | yes       |
+| did-mount  | (fn [node ratom] ...) |           | yes       |
+| did-update | (fn [node ratom] ...) | did-mount | no        |
+| children   | [ piece ]             |           | no        |
+
+- `:elem-with-data` for when you want to add a series of elements that are joined to a dataset
+
+| key             | type                  | default                                         | required? |
+|-----------------|-----------------------|-------------------------------------------------|-----------|
+| class           | string                |                                                 | yes       |
+| tag             | string                |                                                 | yes       |
+| did-mount       | (fn [node ratom] ...) |                                                 | yes       |
+| did-update      | (fn [node ratom] ...) | did-mount                                       | no        |
+| prepate-dataset | (fn [ratom] ...)      | (fn [ratom] (-> @ratom (get :dataset) clj->js)) | no        |
+
+- `:container` for when you want to group *elem* or *elem-with-data*'s together.
+
+| key        | type                  | default   | required? |
+|------------|-----------------------|-----------|-----------|
+| class      | string                |           | yes       |
+| did-mount  | (fn [node ratom] ...) |           | yes       |
+| did-update | (fn [node ratom] ...) | did-mount | no        |
+| children   | [ piece ]             |           | no        |
+
+- `:raw` for when you want to either trigger some side-effect or have an escape hatch from the rid3
+
+| key        | type             | default | required? |
+|------------|------------------|---------|-----------|
+| did-mount  | (fn [ratom] ...) |         | yes       |
+| did-update | (fn [ratom] ...) |         | yes       |
 
 In this example, we:
 - used an `elem` piece
