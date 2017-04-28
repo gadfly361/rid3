@@ -203,8 +203,7 @@
       :children
       [{:kind       :container
         :class      "x-axis"
-        :did-mount  x-axis
-        :did-update x-axis}
+        :did-mount  x-axis}
        {:kind      :container
         :class     "y-axis"
         :did-mount y-axis}]}

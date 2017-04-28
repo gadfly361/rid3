@@ -36,6 +36,39 @@
 (def barchart3-cursor (reagent/cursor app-state [:barchart3]))
 (def pie-cursor (reagent/cursor app-state [:pie]))
 
+(defn viz [ratom]
+  [d3/viz
+   {:id    "some-id"
+    :ratom ratom
+    :svg   {:did-mount (fn [node _]
+                         (-> node
+                             (.attr "width" 200)
+                             (.attr "height" 200)
+                             (.style "background-color" "grey")))}
+    :pieces
+    [{:kind      :elem
+      :class     "backround"
+      :tag       "circle"
+      :did-mount (fn [node _]
+                   (-> node
+                       (.attr "cx" 100)
+                       (.attr "cy" 100)
+                       (.attr "r" 50)))}
+
+     {:kind      :elem
+      :class     "foreground"
+      :tag       "text"
+      :did-mount (fn [node _]
+                   (-> node
+                       (.attr "x" 100)
+                       (.attr "y" 100)
+                       (.attr "text-anchor" "middle")
+                       (.attr "alignment-baseline" "middle")
+                       (.attr "fill" "green")
+                       (.attr "font-size" "24px")
+                       (.attr "font-family" "sans-serif")
+                       (.text "RID3")))}]
+    }])
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -72,6 +105,7 @@
      [barchart3/example barchart3-cursor]
      [pie/example pie-cursor]
      [arc-tween/example arc-tween-cursor]
+
      [:div
       {:style {:margin-top "200px"}}]
      ]))
