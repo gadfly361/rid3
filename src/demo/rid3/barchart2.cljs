@@ -122,7 +122,7 @@
 ;;; bar
 
 (defn bar [node ratom]
-  (let [height (get-height ratom)
+  (let [height  (get-height ratom)
         x-scale (create-x-scale ratom)
         y-scale (create-y-scale ratom)]
     (-> node
@@ -201,9 +201,9 @@
      {:kind  :container
       :class "axis"
       :children
-      [{:kind       :container
-        :class      "x-axis"
-        :did-mount  x-axis}
+      [{:kind      :container
+        :class     "x-axis"
+        :did-mount x-axis}
        {:kind      :container
         :class     "y-axis"
         :did-mount y-axis}]}

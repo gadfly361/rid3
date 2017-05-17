@@ -4,12 +4,10 @@ Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to
 
 [demo](http://rid3.s3-website-us-west-1.amazonaws.com/)
 
-**Caution**: Rid3 is alpha status and should only be used for toy applications.  I fully anticipate breaking changes in the near future. However, with your help/feedback, hopefully we can get to a stable release.
-
 To use rid3, add the following to the `:dependencies` vector in your project.clj file:
 
 ```clojure
-[rid3.core "0.1.0-SNAPSHOT"]
+[rid3.core "0.1.0-alpha"]
 ```
 
 ## The Problem
