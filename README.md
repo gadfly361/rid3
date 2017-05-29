@@ -7,7 +7,7 @@ Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to
 To use rid3, add the following to the `:dependencies` vector in your project.clj file:
 
 ```clojure
-[rid3.core "0.1.0-alpha"]
+[rid3 "0.1.0-alpha-2"]
 ```
 
 ## The Problem
@@ -94,7 +94,7 @@ Just so you can get a sense of a `viz`component, let's create a minimal example 
 Add the following to the `:dependencies` vector of your project.clj file.
 
 ```clojure
-[rid3.core "0.1.0-SNAPSHOT"]
+[rid3 "0.1.0-alpha-2"]
 ```
 
 ### Require rid3 in your namespace
