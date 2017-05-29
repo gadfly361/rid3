@@ -125,13 +125,13 @@ Which will result in the following:
 ```html
 <div id="some-id">
   <svg width="200" height="200" style="background-color: grey;">
-    <g class="main-container">
+    <g class="rid3-main-container">
     </g>
   </svg>
 </div>
 ```
 
-You probably noticed that rid3 added a g tag with the class `.main-container` inside of your svg.  This is where rid3 will place all of your pieces.
+You probably noticed that rid3 added a g tag with the class `.rid3-main-container` inside of your svg.  This is where rid3 will place all of your pieces.
 
 *Note: All viz components need to provide a ratom. All relevant data for the component should be stored here. If anything changes in this ratom, then rid3 will trigger a re-render of the viz component for you.*
 
@@ -165,7 +165,7 @@ Which will result in the following:
 ```html
 <div id="some-id">
   <svg width="200" height="200" style="background-color: grey;">
-    <g class="main-container">
+    <g class="rid3-main-container">
       <g class="backround">
 	<circle cx="100" cy="100" r="50">
 	</circle>
@@ -221,7 +221,7 @@ Which will result in the following:
 ```html
 <div id="some-id">
   <svg width="200" height="200" style="background-color: grey;">
-    <g class="main-container">
+    <g class="rid3-main-container">
       <g class="backround">
 	<circle cx="100" cy="100" r="50">
 	</circle>

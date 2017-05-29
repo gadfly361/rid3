@@ -38,14 +38,14 @@
         node      (js/d3.select (str "#" id " svg"))]
     (-> node
         (.append "g")
-        (.attr "class" "main-container")
+        (.attr "class" "rid3-main-container")
         (did-mount ratom))))
 
 (defn- main-container-did-update [id main-container ratom]
   (let [did-update (or (get main-container :did-update)
                        (get main-container :did-mount) ;; sane fallback
                        (fn [node] node))
-        node       (js/d3.select (str "#" id " svg .main-container"))]
+        node       (js/d3.select (str "#" id " svg .rid3-main-container"))]
     (did-update node ratom)))
 
 
@@ -85,7 +85,7 @@
 
 (defn- node-selector [id prev-classes]
   (let [prev-classes (remove nil? prev-classes)]
-    (str "#" id " svg .main-container"
+    (str "#" id " svg .rid3-main-container"
          (when-not (empty? prev-classes)
            (str " ." (string/join " ." prev-classes))))))
 
