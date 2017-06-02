@@ -31,6 +31,12 @@ The `viz` component takes a hash-map of the following:
 | :main-container  | main-container     |                                                 | no        |
 | :pieces          | [ piece ]          |                                                 | no        |
 
+- an `:id` is required to differentiate between different rid3's
+- a `:ratom` can be a reagent atom, reagent cursor, or a re-frame subscription. This should be used to store all of the data relevant to your rid3.
+- :prepare-dataset will be the *default* way to prepare any :elem-with-data piece.
+
+### :svg
+
 Where an svg hash-map looks like:
 
 | key         | type                  | default   | required? |
@@ -39,12 +45,16 @@ Where an svg hash-map looks like:
 | :did-update | (fn [node ratom] ...) | did-mount | no        |
 
 
+### :main-container
+
 Where a main-container hash-map looks like:
 
 | key         | type                  | default   | required? |
 |-------------|-----------------------|-----------|-----------|
 | :did-mount  | (fn [node ratom] ...) |           | no        |
 | :did-update | (fn [node ratom] ...) | did-mount | no        |
+
+### :pieces
 
 And where :pieces is a vector of piece hash-maps.  There are four kinds of piece hash-maps:
 
