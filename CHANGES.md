@@ -1,5 +1,9 @@
 # Changes
 
+## 0.1.0-alpha-3
+
+- fix broken demo
+- move resources to dev-resources
 
 ## 0.1.0-alpha-2
 
