@@ -10,7 +10,7 @@
 
   :plugins [[lein-cljsbuild "1.1.4"]]
 
-  :clean-targets ^{:protect false} ["resources/public/js"
+  :clean-targets ^{:protect false} ["dev-resources/public/js"
                                     "target"]
 
   :profiles
@@ -28,8 +28,8 @@
      :figwheel     {:on-jsload "rid3.demo/reload"}
      :compiler     {:main                 rid3.demo
                     :optimizations        :none
-                    :output-to            "resources/public/js/app.js"
-                    :output-dir           "resources/public/js/dev"
+                    :output-to            "dev-resources/public/js/app.js"
+                    :output-dir           "dev-resources/public/js/dev"
                     :asset-path           "js/dev"
                     :source-map-timestamp true
                     :preloads             [devtools.preload]
@@ -43,8 +43,8 @@
      :source-paths ["src/demo" "src/main"]
      :compiler     {:main            rid3.demo
                     :optimizations   :advanced
-                    :output-to       "resources/public/js/app.js"
-                    :output-dir      "resources/public/js/min"
+                    :output-to       "dev-resources/public/js/app.js"
+                    :output-dir      "dev-resources/public/js/min"
                     :externs         ["externs.js"]
                     :elide-asserts   true
                     :closure-defines {goog.DEBUG false}

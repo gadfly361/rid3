@@ -4,6 +4,8 @@
    [reagent.core :as reagent]
    [re-frisk.core :as rf]
 
+   [rid3.core :as d3]
+
    [rid3.demo-util :as dutil]
    [rid3.arc-tween :as arc-tween]
    [rid3.barchart :as barchart]
