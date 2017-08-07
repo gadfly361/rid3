@@ -1,0 +1,12 @@
+* viz
+** :id :required:
+** :ratom :required:
+** :svg :required:
+** :main-container :optional:
+** :pieces :optional:
+*** kinds
+**** :container 
+**** :elem
+**** :elem-with-data
+**** :raw
+** :prepare-dataset :optional: 
