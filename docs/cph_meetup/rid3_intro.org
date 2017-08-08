@@ -1,0 +1,761 @@
+#+TITLE: Introduction to Rid3
+#+AUTHOR: Matthew Jaoudi, [[https://github.com/gadfly361][@gadfly361]]
+#+DATE: August 8th, 2017
+#+OPTIONS: timestamp:nil toc:nil num:nil
+#+REVEAL_THEME: solarized
+#+REVEAL_PLUGINS: (highlight)
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css" />
+
+
+* The Goal
+To make pretty visualizations in clojurescript SPA
+
+#+ATTR_REVEAL: :frag t :frag_idx 1
+[[https://d3js.org/][D3.js]]
+
+#+ATTR_REVEAL: :frag t :frag_idx 1
+- visualization library
+- SVG
+- /DOM manipulation/
+
+#+ATTR_REVEAL: :frag t :frag_idx 2
+[[http://reagent-project.github.io/][Reagent]]
+
+#+ATTR_REVEAL: :frag t :frag_idx 2
+- [[https://clojurescript.org/][Clojurescript]] wrapper around [[https://facebook.github.io/react/][React.js]]
+  - Makes SPAs
+  - Most used wrapper
+- /Virtual DOM/
+
+* Outline
+- Static example w/o Rid3
+- Dynamic example w/o Rid3
+- Describe the problem
+- Introduce Rid3
+- Dynamic example w/ Rid3
+- GUP example w/o Rid3
+- GUP example w/ Rid3
+  
+* Static example w/o Rid3
+Objectives
+- create svg with grey background
+- put green circle in center of svg
+#+HTML: <br></br>
+#+HTML: <img src="ex_wo_dd.png"/>
+** Source Code
+
+#+BEGIN_SRC clojure
+(defn viz-render []
+  [:div {:id "viz"}])
+
+(defn viz-did-mount []
+  ;; Select node
+  (let [node (js/d3.select "#viz")]
+    (-> node
+        (.append "svg") ;; Focus is on svg
+        (.attr "height" 100)
+        (.attr "width" 100)
+        (.style "background-color" "lightgrey")
+
+        (.append "g") ;; Focus is on g
+        (.append "circle") ;; Focus is on circle
+        (.attr "r" 25)
+        (.attr "cx" 50)
+        (.attr "cy" 50)
+        (.attr "fill" "green")
+        )))
+
+(defn viz []
+  (reagent/create-class
+   {:reagent-render      viz-render
+    :component-did-mount viz-did-mount}))
+#+END_SRC
+
+** React Component Lifecycle
+
+Mounting
+- componentWillMount
+- *render*
+- *componentDidMount*
+
+Updating
+- componentWillReceiveProps
+- shouldComponentUpdate
+- render
+- componentDidUpdate
+
+Unmounting
+- componentWillUnmount
+** Output
+
+#+HTML: <img src="ex_wo_dd.png"/>
+
+#+BEGIN_SRC html
+  <div id="viz">
+    <svg height="100" width="100" style="background-color: lightgrey;">
+      <g>
+	<circle r="25" cx="50" cy="50" fill="green"></circle>
+      </g>
+    </svg>
+  </div>
+#+END_SRC
+
+* Dynamic example w/o Rid3
+Objectives
+- create svg with grey background
+- put green circle in center of svg
+- *update radius dynamically*
+#+HTML: <br></br>
+#+HTML: <img src="ex_w_dd_baseline.png"/>
+#+HTML: <img src="ex_w_ddC.png"/>
+
+** Source Code
+
+#+BEGIN_SRC clojure
+  ;; Add reagent atom (i.e., ratom)
+  (defonce radius-ratom (reagent/atom 25))
+
+  (defn viz-render[]
+    ;; deref ratom to cause re-render
+    (let [_ @radius-ratom]
+      [:div {:id "viz"}]))
+
+  (defn viz-did-mount []
+    (let [node   (js/d3.select "#viz")
+          radius @radius-ratom] ;; Depend on ratom
+      (-> node
+          (.append "svg")
+          (.attr "height" 100)
+          (.attr "width" 100)
+          (.style "background-color" "lightgrey")
+
+          (.append "g")
+          (.append "circle")
+          (.attr "r" radius)
+          (.attr "cx" 50)
+          (.attr "cy" 50)
+          (.attr "fill" "green"))))
+
+
+  (defn viz []
+    (reagent/create-class
+     {:reagent-render       viz-render
+      :component-did-mount  viz-did-mount
+      }))
+#+END_SRC
+
+** Output
+
+#+HTML: <img src="ex_w_dd_baseline.png"/>
+#+HTML: <img src="ex_w_ddA.png"/>
+
+#+BEGIN_SRC html
+  <div id="viz">
+    <svg height="100" width="100" style="background-color: lightgrey;">
+      <g>
+	<!-- Radius was NOT decremented -->
+	<circle r="25" cx="50" cy="50" fill="green">
+	</circle>
+      </g>
+    </svg>
+  </div>
+#+END_SRC
+** React Component Lifecycle
+
+Mounting
+- componentWillMount
+- render
+- componentDidMount
+
+Updating
+- componentWillReceiveProps
+- shouldComponentUpdate
+- *render*
+- *componentDidUpdate*
+
+Unmounting
+- componentWillUnmount
+
+* Dynamic example w/o Rid3 (attempt 2)
+Objectives
+- create svg with grey background
+- put green circle in center of svg
+- *update radius dynamically*
+#+HTML: <br></br>
+#+HTML: <img src="ex_w_dd_baseline.png"/>
+#+HTML: <img src="ex_w_ddC.png"/>
+
+** Source Code
+
+#+BEGIN_SRC clojure
+  (defonce radius-ratom (reagent/atom 25))
+
+  (defn viz-render[]
+    (let [_ @radius-ratom]
+      [:div {:id "viz"}]))
+
+  (defn viz-did-mount []
+    (let [node   (js/d3.select "#viz")
+          radius @radius-ratom]
+      (-> node
+          (.append "svg")
+          (.attr "height" 100)
+          (.attr "width" 100)
+          (.style "background-color" "lightgrey")
+
+          (.append "g")
+          (.append "circle")
+          (.attr "r" radius)
+          (.attr "cx" 50)
+          (.attr "cy" 50)
+          (.attr "fill" "green"))))
+
+  (defn viz []
+    (reagent/create-class
+     {:reagent-render       viz-render
+      :component-did-mount  viz-did-mount
+      ;; add component-did-update lifecycle
+      ;; (using same fn as did-mount)
+      :component-did-update viz-did-mount
+      }))
+#+END_SRC
+
+** Output
+
+#+HTML: <img src="ex_w_dd_baseline.png"/>
+#+HTML: <img src="ex_w_ddB.png"/>
+
+#+BEGIN_SRC html
+  <div id="viz">
+    <svg height="100" width="100" style="background-color: lightgrey;">
+      <g>
+	<circle r="25" cx="50" cy="50" fill="green">
+	</circle>
+      </g>
+    </svg>
+    <svg height="100" width="100" style="background-color: lightgrey;">
+      <g>
+	<circle r="24" cx="50" cy="50" fill="green">
+	</circle>
+      </g>
+    </svg>
+    <svg height="100" width="100" style="background-color: lightgrey;">
+      <g>
+	<circle r="23" cx="50" cy="50" fill="green">
+	</circle>
+      </g>
+    </svg>
+  </div>
+#+END_SRC
+
+* Dynamic example w/o Rid3 (attempt 3)
+Objectives
+- create svg with grey background
+- put green circle in center of svg
+- *update radius dynamically*
+#+HTML: <br></br>
+#+HTML: <img src="ex_w_dd_baseline.png"/>
+#+HTML: <img src="ex_w_ddC.png"/>
+** Source Code
+
+#+BEGIN_SRC clojure
+  (defonce radius-ratom (reagent/atom 25))
+
+  (defn viz-render[]
+    (let [_ @radius-ratom]
+      [:div {:id "viz"}]))
+
+  (defn viz-did-mount []
+    (let [node   (js/d3.select "#viz")
+          radius @radius-ratom]
+      (-> node
+          (.append "svg")
+          (.attr "height" 100)
+          (.attr "width" 100)
+          (.style "background-color" "lightgrey")
+
+          (.append "g")
+          (.append "circle")
+          (.attr "r" radius)
+          (.attr "cx" 50)
+          (.attr "cy" 50)
+          (.attr "fill" "green"))))
+
+  ;; Add did-update fn that doesn't append elements
+  (defn viz-did-update [ratom]
+    (let [node   (js/d3.select "#viz svg circle")
+          radius @radius-ratom]
+      (-> node
+          (.attr "r" radius)
+          (.attr "cx" 50)
+          (.attr "cy" 50)
+          (.attr "fill" "green"))))
+
+  (defn viz []
+    (reagent/create-class
+     {:reagent-render       viz-render
+      :component-did-mount  viz-did-mount
+      ;; Use did-update fn
+      :component-did-update viz-did-update
+      }))
+#+END_SRC
+
+** Output
+
+#+HTML: <img src="ex_w_dd_baseline.png"/>
+#+HTML: <img src="ex_w_ddC.png"/>
+
+#+BEGIN_SRC html
+  <div id="viz">
+    <svg height="100" width="100" style="background-color: lightgrey;">
+      <g>
+	<!-- Radius was decremented -->
+	<circle r="10" cx="50" cy="50" fill="green">
+	</circle>
+      </g>
+    </svg>
+  </div>
+#+END_SRC
+
+* So ... what's the problem?
+
+#+ATTR_REVEAL: :frag t :frag_idx 1
+*Manually* deref ratom
+
+#+ATTR_REVEAL: :frag t :frag_idx 2
+*Manually* append elements
+
+#+ATTR_REVEAL: :frag t :frag_idx 3
+*Manually* select nodes
+
+#+ATTR_REVEAL: :frag t :frag_idx 4
+*Not DRY*
+
+#+ATTR_REVEAL: :frag t :frag_idx 5
+*Manually* create [[https://github.com/Day8/re-frame/wiki/Creating-Reagent-Components#form-3-a-class-with-life-cycle-methods][Form-3]] component
+
+** Let's see it in the code
+
+#+BEGIN_SRC clojure
+  (defonce radius-ratom (reagent/atom 25))
+
+  (defn viz-render[]
+    ;; Manually deref ratom
+    (let [_ @radius-ratom]
+      [:div {:id "viz"}]))
+
+  (defn viz-did-mount []
+    (let [;; Manually select DOM node
+          node   (js/d3.select "#viz")
+          radius @radius-ratom]
+      (-> node
+          ;; Manually append svg
+          (.append "svg")
+          (.attr "height" 100)
+          (.attr "width" 100)
+          (.style "background-color" "lightgrey")
+
+          ;; Manually append g
+          (.append "g")
+          ;; Manually append circle
+          (.append "circle")
+
+          ;; Code repeated in viz-did-update
+          (.attr "r" radius)
+          (.attr "cx" 50)
+          (.attr "cy" 50)
+          (.attr "fill" "green"))))
+
+  (defn viz-did-update [ratom]
+    (let [;; Manually select DOM node
+          node   (js/d3.select "#viz svg circle")
+          radius @radius-ratom]
+      (-> node
+          (.attr "r" radius)
+          (.attr "cx" 50)
+          (.attr "cy" 50)
+          (.attr "fill" "green"))))
+
+  ;; Manually create a Form-3 component
+  (defn viz []
+    (reagent/create-class
+     {:reagent-render       viz-render
+      :component-did-mount  viz-did-mount
+      :component-did-update viz-did-update
+      }))
+#+END_SRC
+
+** Ok, but is this really a problem?
+
+#+ATTR_REVEAL: :frag t :frag_idx 1
+Yes
+
+#+ATTR_REVEAL: :frag t :frag_idx 2
+Visualizations *grow quickly* w.r.t number and complexity of elements
+
+* Enter Rid3
+
+#+ATTR_REVEAL: :frag t :frag_idx 1
+What is it [[https://github.com/gadfly361/rid3][Rid3]]?
+
+#+ATTR_REVEAL: :frag t :frag_idx 2
+- Reagent interface to d3
+
+#+HTML:<br></br>
+
+#+ATTR_REVEAL: :frag t :frag_idx 3
+Ok ... not really an interface, but I liked the acronym
+
+** API
+
+Rid3 exposes just one thing, a reagent component: *viz*
+
+** Argument to *viz* is a hashmap
+
+#+HTML: <img src="rid3_mm.png"/>
+
+** Using *viz*
+
+#+BEGIN_SRC clojure
+  (defonce radius-ratom (reagent/atom 25))
+
+  (defn viz []
+    [rid3/viz
+     {:id    "viz"
+      :ratom radius-ratom
+      :svg   {:did-mount
+              (fn [node ratom]
+		(-> node
+                    (.attr "height" 100)
+                    (.attr "width" 100)
+                    (.style "background-color" "lightgrey")))}
+      :pieces
+      [{:kind :elem
+	:tag   "circle"
+	:class "my-circle"
+	:did-mount
+	(fn [node ratom]
+          (let [radius @ratom]
+            (-> node
+		(.attr "r" radius)
+		(.attr "cx" 50)
+		(.attr "cy" 50)
+		(.attr "fill" "green"))))}]}])
+#+END_SRC
+
+** Output
+
+#+HTML: <img src="ex_w_dd_baseline.png"/>
+#+HTML: <img src="ex_w_ddC.png"/>
+
+#+BEGIN_SRC html
+  <div id="viz">
+    <svg height="100" width="100" style="background-color: lightgrey;">
+      <g class="rid3-main-container"> <!-- rid3 provides this class -->
+	<g class="my-circle">	  <!-- user provides this class -->
+	  <circle r="10" cx="50" cy="50" fill="green">
+	  </circle>
+	</g>
+      </g>
+    </svg>
+  </div>
+#+END_SRC
+
+** Rid3 Benefits
+
+#+ATTR_REVEAL: :frag t :frag_idx 1
+Derefs ratom for you
+
+#+ATTR_REVEAL: :frag t :frag_idx 2
+Appends elements for you
+
+#+ATTR_REVEAL: :frag t :frag_idx 3
+Passes appropriate node as argument
+#+ATTR_REVEAL: :frag t :frag_idx 3
+
+#+ATTR_REVEAL: :frag t :frag_idx 4
+DRY code
+
+#+ATTR_REVEAL: :frag t :frag_idx 5
+Avoids use of [[https://github.com/Day8/re-frame/wiki/Creating-Reagent-Components#form-3-a-class-with-life-cycle-methods][Form-3]] component
+
+#+ATTR_REVEAL: :frag t :frag_idx 7
+Defaults did-mount function to did-update
+
+#+ATTR_REVEAL: :frag t :frag_idx 8
+Enforces classes on tags bringing visibility to svg structure
+
+#+ATTR_REVEAL: :frag t :frag_idx 9
+Implicitly uses D3's [[https://bl.ocks.org/mbostock/3808218][General Update Pattern]]
+
+
+** What is D3's [[https://bl.ocks.org/mbostock/3808218][General Update Pattern]]?
+- Data joins
+- Enter
+- Update
+- Exit
+
+* General Update Pattern w/o Rid3
+Objectives
+- create svg with grey background
+- create dynamic barchart inside svg
+- add margin around barchart
+#+HTML: <br></br>
+#+HTML: <img src="ex_gupA.png"/>
+#+HTML: <img src="ex_gupB.png"/>
+** Source
+#+BEGIN_SRC clojure
+;; Vars
+
+(def width 160)
+(def height 160)
+
+(def margin {:top 16
+             :right 16
+             :bottom 16
+             :left 16})
+
+(defonce app-state
+  (reagent/atom
+   {:data  [{:x 5}
+            {:x 2}
+            {:x 3}]}))
+
+
+;; svg (react lifecycle)
+
+(defn svg-did-mount [ratom]
+  (-> (js/d3.select "#barchart")
+      (.append "svg")
+      (.attr "width" (+ width
+                        (:left margin)
+                        (:right margin)))
+      (.attr "height" (+ height
+                         (:top margin)
+                         (:bottom margin)))
+      (.style "background-color" "lightgrey")))
+
+
+;; main-container (react lifecycle)
+
+(defn main-container-did-mount [ratom]
+  (-> (js/d3.select "#barchart svg")
+      (.append "g")
+      (.attr "class" "main-container")
+      (.attr "transform"
+             (str "translate("
+                  (:left margin)
+                  ","
+                  (:top margin)
+                  ")"))))
+
+
+;; bars (d3 general update pattern)
+
+(defn bars-data-join->node [ratom]
+  (let [data (:data @ratom)]
+    (-> (js/d3.select "#barchart svg .main-container .bars")
+        (.selectAll "rect")
+        (.data (clj->js data)))))
+
+(defn bars-enter [ratom]
+  (let [node (bars-data-join->node ratom)]
+    (-> node
+        .enter
+        (.append "rect"))))
+
+(defn bars-update [ratom]
+  (let [node (bars-data-join->node ratom)
+        data    (:data @ratom)
+        data-n  (count data)
+        rect-height (/ height data-n)
+        x-scale (-> js/d3
+                    .scaleLinear
+                    (.domain #js [0 5])
+                    (.range #js [0 width]))]
+    (-> node
+        (.attr "fill" "green")
+        (.attr "x" (x-scale 0))
+        (.attr "y" (fn [_ i]
+                     (* i rect-height)))
+        (.attr "height" (- rect-height 1))
+        (.attr "width" (fn [d]
+                         (x-scale (aget d "x")))))))
+
+(defn bars-exit [ratom]
+  (let [node (bars-data-join->node ratom)]
+    (-> node
+        .exit
+        .remove)))
+
+
+;; bars (react lifecycle)
+
+(defn bars-did-update [ratom]
+  (bars-enter ratom)
+  (bars-update ratom)
+  (bars-exit ratom))
+
+(defn bars-did-mount [ratom]
+  (-> (js/d3.select "#barchart svg .main-container")
+      (.append "g")
+      (.attr "class" "bars"))
+  (bars-did-update ratom))
+
+
+;; Main
+
+(defn viz-render [ratom]
+  (let [_ @ratom]
+    [:div
+     {:id "barchart"}]))
+
+(defn viz-did-mount [ratom]
+  (svg-did-mount ratom)
+  (main-container-did-mount ratom)
+  (bars-did-mount ratom))
+
+(defn viz-did-update [ratom]
+  (bars-did-update ratom))
+
+(defn viz [ratom]
+  (reagent/create-class
+   {:reagent-render      #(viz-render ratom)
+    :component-did-mount #(viz-did-mount ratom)
+    :component-did-update #(viz-did-update ratom)}))
+#+END_SRC
+
+** Output
+
+#+HTML: <img src="ex_gupA.png"/>
+#+HTML: <img src="ex_gupB.png"/>
+
+#+BEGIN_SRC html
+  <div id="barchart">
+    <svg width="192" height="192" style="background-color: lightgrey;">
+      <g class="main-container" transform="translate(16,16)">
+	<g class="bars">
+	  <rect fill="green" x="0" y="0" height="52.333333333333336" width="160">
+	  </rect>
+	  <rect fill="green" x="0" y="53.333333333333336" height="52.333333333333336" width="64">
+	  </rect>
+	  <rect fill="green" x="0" y="106.66666666666667" height="52.333333333333336" width="96">
+	  </rect>
+	</g>
+      </g>
+    </svg>
+  </div>
+#+END_SRC
+* General Update Pattern w/ Rid3
+Objectives
+- create svg with grey background
+- create dynamic barchart inside svg
+- add margin around barchart
+#+HTML: <br></br>
+#+HTML: <img src="ex_gupA.png"/>
+#+HTML: <img src="ex_gupB.png"/>
+** Source
+#+BEGIN_SRC clojure
+(defonce app-state
+  (reagent/atom
+   {:width 160
+    :height 160
+    :margin {:top 16
+             :right 16
+             :bottom 16
+             :left 16}
+    :dataset  [{:x 5}
+               {:x 2}
+               {:x 3}]}))
+
+
+(defn viz []
+  [rid3/viz
+   {:id "barchart"
+    :ratom app-state
+
+    :svg
+    {:did-mount
+     (fn [node ratom]
+       (let [{:keys [margin
+                     width
+                     height]} @ratom]
+         (-> node
+             (.attr "width" (+ width
+                               (:left margin)
+                               (:right margin)))
+             (.attr "height" (+ height
+                                (:top margin)
+                                (:bottom margin)))
+             (.style "background-color" "lightgrey"))))}
+
+    :main-container
+    {:did-mount
+     (fn [node ratom]
+       (let [margin (:margin @ratom)]
+         (-> node
+             (.attr "transform"
+                    (str "translate("
+                         (:left margin)
+                         ","
+                         (:top margin)
+                         ")")))))}
+    :pieces
+    [{:kind :elem-with-data
+      :tag "rect"
+      :class "bars"
+      :did-mount
+      (fn [node ratom]
+        (let [{:keys [dataset
+                      width
+                      height]} @ratom
+              data-n  (count dataset)
+              rect-height (/ height data-n)
+              x-scale (-> js/d3
+                          .scaleLinear
+                          (.domain #js [0 5])
+                          (.range #js [0 width]))]
+          (-> node
+              (.attr "fill" "green")
+              (.attr "x" (x-scale 0))
+              (.attr "y" (fn [_ i]
+                           (* i rect-height)))
+              (.attr "height" (- rect-height 1))
+              (.attr "width" (fn [d]
+                               (x-scale (aget d "x")))))))}]}])
+#+END_SRC
+
+** Output
+
+#+HTML: <img src="ex_gupA.png"/>
+#+HTML: <img src="ex_gupB.png"/>
+
+#+BEGIN_SRC html
+  <div id="barchart">
+    <svg width="192" height="192" style="background-color: lightgrey;">
+      <g class="rid3-main-container" transform="translate(16,16)">
+	<g class="bars">
+	  <rect fill="green" x="0" y="0" height="52.333333333333336" width="160">
+	  </rect>
+	  <rect fill="green" x="0" y="53.333333333333336" height="52.333333333333336" width="64">
+	  </rect>
+	  <rect fill="green" x="0" y="106.66666666666667" height="52.333333333333336" width="96">
+	  </rect>
+	</g>
+      </g>
+    </svg>
+  </div>
+#+END_SRC
+
+* Outro
+
+Thanks for listening!
+
+
+- Project: https://github.com/gadfly361/rid3
+- Twitter: [[https://twitter.com/gadfly361][@gadfly361]]
+
+#+HTML:<br></br>
+
+#+ATTR_REVEAL: :frag t :frag_idx 1
+Any Questions?
