@@ -4,6 +4,8 @@ Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to
 
 [demo](http://rid3.s3-website-us-west-1.amazonaws.com/)
 
+[clojure meetup slides](http://rawgit.com/gadfly361/rid3/master/docs/cph_meetup/rid3_intro.html)
+
 To use rid3, add the following to the `:dependencies` vector in your project.clj file:
 
 ```clojure
@@ -254,7 +256,6 @@ TODO: complete documentation.
 ---
 
 Please check out the [demo](http://rid3.s3-website-us-west-1.amazonaws.com/) and its [source](https://github.com/gadfly361/rid3/tree/master/src/demo/rid3)
-
 
 ## License
 
