@@ -1,6 +1,6 @@
 (ns rid3.pie
   (:require
-   [rid3.core :as d3]
+   [rid3.core :as rid3]
    [rid3.demo-util :as dutil]
    ))
 
@@ -101,7 +101,7 @@
 ;; viz
 
 (defn viz [ratom]
-  [d3/viz
+  [rid3/viz
    {:id              "piechart"
     :ratom           ratom
     :prepare-dataset prepare-dataset

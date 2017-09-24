@@ -114,14 +114,14 @@ Add the following to the `:dependencies` vector of your project.clj file.
 ```clojure
 (ns foo.core
   (:require
-   [rid3.core :as d3]))
+   [rid3.core :as rid3]))
 ```
 
 ### Create an svg
 
 ```clojure
 (defn viz [ratom]
-  [d3/viz
+  [rid3/viz
    {:id    "some-id"
     :ratom ratom
     :svg   {:did-mount (fn [node _]
@@ -151,7 +151,7 @@ You probably noticed that rid3 added a g tag with the class `.rid3-main-containe
 
 ```clojure
 (defn viz [ratom]
-  [d3/viz
+  [rid3/viz
    {:id    "some-id"
     :ratom ratom
     :svg   {:did-mount (fn [node _]
@@ -193,7 +193,7 @@ Please note, that there is **no** `.append` method in our did-mount function! Ri
 
 ```clojure
 (defn viz [ratom]
-  [d3/viz
+  [rid3/viz
    {:id    "some-id"
     :ratom ratom
     :svg   {:did-mount (fn [node _]

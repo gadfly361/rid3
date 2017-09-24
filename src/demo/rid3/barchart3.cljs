@@ -1,7 +1,7 @@
 (ns rid3.barchart3
   (:require
    [garden.core :refer [css]]
-   [rid3.core :as d3]
+   [rid3.core :as rid3]
    [rid3.demo-util :as dutil]
    ))
 
@@ -168,7 +168,7 @@
 ;; viz
 
 (defn viz [ratom]
-  [d3/viz
+  [rid3/viz
    {:id             "barchart3"
     :ratom          ratom
     :svg            {:did-mount svg}

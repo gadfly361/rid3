@@ -1,6 +1,6 @@
 (ns rid3.arc-tween
   (:require
-   [rid3.core :as d3]
+   [rid3.core :as rid3]
    [rid3.demo-util :as dutil]
    ))
 
@@ -118,7 +118,7 @@
 ;; viz
 
 (defn viz [ratom]
-  [d3/viz
+  [rid3/viz
    {:id             "arc-tween"
     :ratom          ratom
     :svg            {:did-mount svg}
