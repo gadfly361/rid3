@@ -14,6 +14,7 @@ This release attempts to improve performance by removing unnecessary elements.
 
 - If you were using the top-level `:prepare-dataset`, you will need to move it inside all of the `:elem-with-data` pieces.
 - If you were using `(.attr node "class" "XXX")` in your `:elem` or `:elem-with-data` pieces, you will need to use `(.classed node "XXX" true)` instead.
+- If you were using `:children` from within an `:elem` piece, add a `:container` piece and use its `:children` instead
 
 ## 0.1.0-alpha-3 (2017-06-14)
 

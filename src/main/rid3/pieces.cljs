@@ -1,6 +1,5 @@
 (ns rid3.pieces
   (:require
-   [clojure.string :as string]
    [cljsjs.d3]
    [rid3.data :as data]
    [rid3.util :as util]))
@@ -97,8 +96,8 @@
 
      (let [children (get piece :children)]
        (cond
-         (and children (or (= kind :container)
-                           (= kind :elem)))
+         (and children
+              (= kind :container))
          (doseq [child children]
            (handle-piece-did-mount child opts (conj prev-classes class)))
 
@@ -203,8 +202,8 @@
 
      (let [children (get piece :children)]
        (cond
-         (and children (or (= kind :container)
-                           (= kind :elem)))
+         (and children
+              (= kind :container))
          (doseq [child children]
            (handle-piece-did-update child opts (conj prev-classes class)))
 
