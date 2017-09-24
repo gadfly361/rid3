@@ -4,12 +4,12 @@ Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to
 
 [demo](http://rid3.s3-website-us-west-1.amazonaws.com/)
 
-[clojure meetup slides](http://rawgit.com/gadfly361/rid3/master/docs/cph_meetup/rid3_intro.html) based on v0.1.0-alpha-3.
+[clojure meetup slides](http://rawgit.com/gadfly361/rid3/master/docs/cph_meetup/rid3_intro.html)
 
 To use rid3, add the following to the `:dependencies` vector in your project.clj file:
 
 ```clojure
-[rid3 "0.2.0"]
+[rid3 "0.1.0-alpha-3"]
 ```
 
 ## The Problem
@@ -28,12 +28,14 @@ The `viz` component takes a hash-map of the following:
 |------------------|--------------------|-------------------------------------------------|-----------|
 | :id              | string             |                                                 | yes       |
 | :ratom           | reagent.core/atom  |                                                 | yes       |
+| :prepare-dataset | (fn [ratom] ...)   | (fn [ratom] (-> @ratom (get :dataset) clj->js)) | no        |
 | :svg             | svg                |                                                 | yes       |
 | :main-container  | main-container     |                                                 | no        |
 | :pieces          | [ piece ]          |                                                 | no        |
 
 - an `:id` is required to differentiate between different rid3's
 - a `:ratom` can be a reagent atom, reagent cursor, or a re-frame subscription. This should be used to store all of the data relevant to your rid3.
+- :prepare-dataset will be the *default* way to prepare any :elem-with-data piece.
 
 ### :svg
 
@@ -75,6 +77,7 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 | :tag        | string                |           | yes       |
 | :did-mount  | (fn [node ratom] ...) |           | yes       |
 | :did-update | (fn [node ratom] ...) | did-mount | no        |
+| :children   | [ piece ]             |           | no        |
 
 - `:elem-with-data` for when you want to add a series of elements that are joined to a dataset
 
@@ -175,8 +178,10 @@ Which will result in the following:
 <div id="some-id">
   <svg width="200" height="200" style="background-color: grey;">
     <g class="rid3-main-container">
-	<circle class="background" cx="100" cy="100" r="50">
+      <g class="backround">
+	<circle cx="100" cy="100" r="50">
 	</circle>
+      </g>
     </g>
   </svg>
 </div>
@@ -229,10 +234,14 @@ Which will result in the following:
 <div id="some-id">
   <svg width="200" height="200" style="background-color: grey;">
     <g class="rid3-main-container">
-	<circle class="background" cx="100" cy="100" r="50">
+      <g class="backround">
+	<circle cx="100" cy="100" r="50">
 	</circle>
-	<text class="foreground" x="100" y="100" text-anchor="middle" alignment-baseline="middle" fill="green" font-size="24px" font-family="sans-serif">RID3
+      </g>
+      <g class="foreground">
+	<text x="100" y="100" text-anchor="middle" alignment-baseline="middle" fill="green" font-size="24px" font-family="sans-serif">RID3
 	</text>
+      </g>
     </g>
   </svg>
 </div>

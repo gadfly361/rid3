@@ -48,21 +48,16 @@
        (= kind :elem)
        (let [node (js/d3.select (node-selector id prev-classes))]
          (-> node
-             (.append "g")
-             (.attr "class" class)
              (.append tag)
+             (.attr "class" class)
              (did-mount ratom)))
 
        (= kind :elem-with-data)
        (let [selector (node-selector id prev-classes)
              node     (js/d3.select selector)]
-         (-> node
-             (.append "g")
-             (.attr "class" class))
-         (let [node-inner (js/d3.select (str selector " ." class))]
-           (data/data-enter node-inner ratom prepare-dataset tag)
-           (data/data-update node-inner ratom prepare-dataset tag did-mount)
-           (data/data-exit node-inner ratom prepare-dataset tag)))
+         (data/data-enter node ratom prepare-dataset tag class)
+         (data/data-update node ratom prepare-dataset tag class did-mount)
+         (data/data-exit node ratom prepare-dataset tag class))
 
        (= kind :raw)
        (did-mount ratom)
@@ -127,15 +122,15 @@
 
        (= kind :elem)
        (let [node (js/d3.select (str (node-selector id prev-classes)
-                                     " ." class " " tag))]
+                                     " " tag "." class))]
          (did-update node ratom))
 
        (= kind :elem-with-data)
-       (let [selector   (node-selector id prev-classes)
-             node-inner (js/d3.select (str selector " ." class))]
-         (data/data-enter node-inner ratom prepare-dataset tag)
-         (data/data-update node-inner ratom prepare-dataset tag did-update)
-         (data/data-exit node-inner ratom prepare-dataset tag))
+       (let [selector (node-selector id prev-classes)
+             node     (js/d3.select selector)]
+         (data/data-enter node ratom prepare-dataset tag class)
+         (data/data-update node ratom prepare-dataset tag class did-update)
+         (data/data-exit node ratom prepare-dataset tag class))
 
        (= kind :raw)
        (when did-update-raw

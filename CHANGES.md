@@ -1,5 +1,12 @@
 # Changes
 
+## 0.2.0 (2017-09-24)
+
+- remove top-level `:prepare-dataset`
+- remove containing `g` tag around `:elem` piece
+- remove containing `g` tag around `:elem-with-data` piece
+- remove `:children` from `:elem` piece
+
 ## 0.1.0-alpha-3 (2017-06-14)
 
 - fix broken demo
