@@ -8,6 +8,7 @@ This release attempts to improve performance by removing unnecessary elements.
 - remove containing `g` tag around `:elem-with-data` piece
 - remove `:children` from `:elem` piece
 - remove top-level `:prepare-dataset`
+- add `:key-fn` to `:elem-with-data` piece
 
 ### Migrating from 0.1.0-alpha-3?
 

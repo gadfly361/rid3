@@ -5,18 +5,19 @@
 
 (defn- data-join [piece opts prev-classes]
   (let [{:keys [id
-                ratom]}           opts
+                ratom]}  opts
         {:keys [tag
                 class
-                prepare-dataset]} piece
-        dataset                   (if prepare-dataset
-                                    (prepare-dataset ratom)
-                                    (clj->js (get @ratom :dataset)))
-        selector                  (util/node-selector id prev-classes)
-        node                      (js/d3.select selector)]
+                prepare-dataset
+                key-fn]} piece
+        dataset          (if prepare-dataset
+                           (prepare-dataset ratom)
+                           (clj->js (get @ratom :dataset)))
+        selector         (util/node-selector id prev-classes)
+        node             (js/d3.select selector)]
     (-> node
         (.selectAll (str tag "." class))
-        (.data dataset))))
+        (.data dataset key-fn))))
 
 
 
