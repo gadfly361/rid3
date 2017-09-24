@@ -6,12 +6,50 @@
    [rid3.util :as util]))
 
 
-(defn- node-selector [id prev-classes]
-  (let [prev-classes (remove nil? prev-classes)]
-    (str "#" id " svg"
-         " ." util/main-container-class
-         (when-not (empty? prev-classes)
-           (str " ." (string/join " ." prev-classes))))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; did-mount
+
+(defn- container-did-mount [piece opts prev-classes]
+  (let [{:keys [id
+                ratom]}             opts
+        {:keys [class
+                did-mount]
+         :or   {did-mount (fn [node ratom]
+                            node)}} piece
+        node                        (js/d3.select (util/node-selector id prev-classes))]
+    (-> node
+        (.append "g")
+        (.attr "class" class)
+        (did-mount ratom))))
+
+
+(defn- elem-did-mount [piece opts prev-classes]
+  (let [{:keys [id
+                ratom]}             opts
+        {:keys [tag
+                class
+                did-mount]
+         :or   {did-mount (fn [node ratom]
+                            node)}} piece
+        node                        (js/d3.select (util/node-selector id prev-classes))]
+    (-> node
+        (.append tag)
+        (.attr "class" class)
+        (did-mount ratom))))
+
+
+(defn- elem-with-data-did-mount [piece opts prev-classes]
+  (data/data-enter piece opts prev-classes)
+  (data/data-update-on-did-mount piece opts prev-classes)
+  (data/data-exit piece opts prev-classes))
+
+
+(defn- raw-did-mount [piece opts]
+  (let [{:keys [ratom]}             opts
+        {:keys [did-mount]
+         :or   {did-mount (fn [node ratom]
+                            node)}} piece]
+    (did-mount ratom)))
 
 
 (defn- handle-piece-did-mount
@@ -19,14 +57,9 @@
    (handle-piece-did-mount piece opts []))
 
   ([piece opts prev-classes]
-   (let [{:keys [id
-                 ratom]}     opts
-         {:keys [kind
+   (let [{:keys [kind
                  class
-                 tag
-                 did-mount]} piece
-         prepare-dataset     (get piece :prepare-dataset)
-         did-mount           (or did-mount (fn [node] node))]
+                 did-mount]} piece]
 
      (when (and (not class)
                 (or (= kind :container)
@@ -36,28 +69,18 @@
 
      (cond
        (= kind :container)
-       (let [node (js/d3.select (node-selector id prev-classes))]
-         (-> node
-             (.append "g")
-             (.attr "class" class)
-             (did-mount ratom)))
+       (container-did-mount piece opts prev-classes)
 
        (= kind :elem)
-       (let [node (js/d3.select (node-selector id prev-classes))]
-         (-> node
-             (.append tag)
-             (.attr "class" class)
-             (did-mount ratom)))
+       (elem-did-mount piece opts prev-classes)
 
        (= kind :elem-with-data)
-       (let [selector (node-selector id prev-classes)
-             node     (js/d3.select selector)]
-         (data/data-enter node ratom prepare-dataset tag class)
-         (data/data-update node ratom prepare-dataset tag class did-mount)
-         (data/data-exit node ratom prepare-dataset tag class))
+       (elem-with-data-did-mount piece opts prev-classes)
 
        (= kind :raw)
-       (did-mount ratom)
+       (raw-did-mount piece opts)
+
+       ;; warn on mistakes
 
        (keyword? piece)
        (js/console.warn (str "[rid3] a piece needs to be a hash-map, you provided a keyword --> " piece))
@@ -70,6 +93,7 @@
 
        :else
        (js/console.warn (str "[rid3] unknown kind --> " kind)))
+
 
      (let [children (get piece :children)]
        (cond
@@ -84,51 +108,85 @@
          :else nil)))))
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; did-update
+
+(defn- container-did-update [piece opts prev-classes]
+  (let [{:keys [id
+                ratom]}      opts
+        {:keys [class
+                did-mount
+                did-update]} piece
+        did-update           (or did-update
+                                 did-mount ;; sane-fallback
+                                 (fn [node ratom]
+                                   node))
+        node                 (js/d3.select (str (util/node-selector id prev-classes)
+                                                " ." class))]
+    (did-update node ratom)))
+
+
+(defn- elem-did-update [piece opts prev-classes]
+  (let [{:keys [id
+                ratom]}      opts
+        {:keys [tag
+                class
+                did-mount
+                did-update]} piece
+        did-update           (or did-update
+                                 did-mount ;; sane-fallback
+                                 (fn [node ratom]
+                                   node))
+        node                 (js/d3.select (str (util/node-selector id prev-classes)
+                                                " " tag "." class))]
+    (did-update node ratom)))
+
+
+(defn- elem-with-data-did-update [piece opts prev-classes]
+  (data/data-enter piece opts prev-classes)
+  (data/data-update-on-did-update piece opts prev-classes)
+  (data/data-exit piece opts prev-classes))
+
+
+(defn- raw-did-update [piece opts]
+  (let [{:keys [ratom]}              opts
+        {:keys [did-update]
+         :or   {did-update (fn [node ratom]
+                             node)}} piece]
+    (did-update ratom)))
+
+
 (defn- handle-piece-did-update
   ([piece opts]
    (handle-piece-did-update piece opts []))
 
   ([piece opts prev-classes]
    (let [{:keys [id
-                 ratom]}     opts
+                 ratom]} opts
          {:keys [kind
-                 class
-                 tag
-                 did-update
-                 did-mount]} piece
-         prepare-dataset     (get piece :prepare-dataset)
-         did-update-raw      did-update
-         did-update          (or did-update
-                                 did-mount ;; sane-fallback
-                                 (fn [node] node))]
+                 class]} piece]
 
      (when (and (not class)
                 (or (= kind :container)
                     (= kind :elem)
                     (= kind :elem-with-data)))
-       (js/console.warn (str "[rid3] a " kind " needs to have a class")))
+       (js/console.warn (str "[rid3] " kind " needs to have a class")))
 
      (cond
        (= kind :container)
-       (let [node (js/d3.select (str (node-selector id prev-classes)
-                                     " ." class))]
-         (did-update node ratom))
+       (container-did-update piece opts prev-classes)
 
        (= kind :elem)
-       (let [node (js/d3.select (str (node-selector id prev-classes)
-                                     " " tag "." class))]
-         (did-update node ratom))
+       (elem-did-update piece opts prev-classes)
 
        (= kind :elem-with-data)
-       (let [selector (node-selector id prev-classes)
-             node     (js/d3.select selector)]
-         (data/data-enter node ratom prepare-dataset tag class)
-         (data/data-update node ratom prepare-dataset tag class did-update)
-         (data/data-exit node ratom prepare-dataset tag class))
+       (elem-with-data-did-update piece opts prev-classes)
 
        (= kind :raw)
-       (when did-update-raw
-         (did-update-raw ratom))
+       (raw-did-update piece opts)
+
+       ;; warn on mistakes
 
        (keyword? piece)
        (js/console.warn (str "[rid3] a piece needs to be a hash-map, you provided a keyword --> " piece))
@@ -141,6 +199,7 @@
 
        :else
        (js/console.warn (str "[rid3] unknown kind --> " kind)))
+
 
      (let [children (get piece :children)]
        (cond
