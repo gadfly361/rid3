@@ -20,16 +20,13 @@
 
   ([piece opts prev-classes]
    (let [{:keys [id
-                 ratom]}       opts
+                 ratom]}     opts
          {:keys [kind
                  class
                  tag
-                 did-mount]}   piece
-         prepare-dataset-outer (get opts :prepare-dataset)
-         prepare-dataset-inner (get piece :prepare-dataset)
-         prepare-dataset       (or prepare-dataset-inner
-                                   prepare-dataset-outer)
-         did-mount             (or did-mount (fn [node] node))]
+                 did-mount]} piece
+         prepare-dataset     (get piece :prepare-dataset)
+         did-mount           (or did-mount (fn [node] node))]
 
      (when (and (not class)
                 (or (= kind :container)
@@ -93,20 +90,17 @@
 
   ([piece opts prev-classes]
    (let [{:keys [id
-                 ratom]}       opts
+                 ratom]}     opts
          {:keys [kind
                  class
                  tag
                  did-update
-                 did-mount]}   piece
-         prepare-dataset-outer (get opts :prepare-dataset)
-         prepare-dataset-inner (get piece :prepare-dataset)
-         prepare-dataset       (or prepare-dataset-inner
-                                   prepare-dataset-outer)
-         did-update-raw        did-update
-         did-update            (or did-update
-                                   did-mount ;; sane-fallback
-                                   (fn [node] node))]
+                 did-mount]} piece
+         prepare-dataset     (get piece :prepare-dataset)
+         did-update-raw      did-update
+         did-update          (or did-update
+                                 did-mount ;; sane-fallback
+                                 (fn [node] node))]
 
      (when (and (not class)
                 (or (= kind :container)

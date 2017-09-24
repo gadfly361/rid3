@@ -12,6 +12,11 @@ To use rid3, add the following to the `:dependencies` vector in your project.clj
 [rid3 "0.2.0"]
 ```
 
+Using an older version?
+
+- [Migrating from v0.1.0-alpha-3?](https://github.com/gadfly361/rid3/blob/master/CHANGES.md)
+- [Previous docs](https://github.com/gadfly361/rid3/tree/master/docs/READMEs)
+
 ## The Problem
 
 In my experience, there is a lot of boilerplate involved when trying to get reagent (i.e., react) and d3 to play nicely together.  The crux of the problem is you only want to append containing g tags (or static elements) to the DOM during reagent's `component-did-mount` lifecycle method and not during the `component-did-update` lifecycle method. However, more often than not, you want d3 to modify the stuff contained in the g tag in the same manner whether or not the component just mounted or just updated.

@@ -104,18 +104,19 @@
   [rid3/viz
    {:id              "piechart"
     :ratom           ratom
-    :prepare-dataset prepare-dataset
     :svg             {:did-mount svg}
     :main-container  {:did-mount main-container}
     :pieces
     [{:kind      :elem-with-data
       :class     "arc"
       :tag       "path"
-      :did-mount arc}
+      :did-mount arc
+      :prepare-dataset prepare-dataset}
      {:kind      :elem-with-data
       :class     "text-label"
       :tag       "text"
-      :did-mount text-label}]}])
+      :did-mount text-label
+      :prepare-dataset prepare-dataset}]}])
 
 
 
