@@ -1,4 +1,4 @@
-(defproject rid3 "0.1.0-alpha-3"
+(defproject rid3 "0.2.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
                  [reagent "0.6.1"]

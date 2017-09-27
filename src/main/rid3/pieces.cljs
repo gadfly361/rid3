@@ -32,15 +32,23 @@
                             node)}} piece
         node                        (js/d3.select (util/node-selector id prev-classes))]
     (-> node
-        (.append tag)
+        (.append "g")
         (.attr "class" class)
+        (.append tag)
         (did-mount ratom))))
 
 
 (defn- elem-with-data-did-mount [piece opts prev-classes]
-  (data/data-enter piece opts prev-classes)
-  (data/data-update-on-did-mount piece opts prev-classes)
-  (data/data-exit piece opts prev-classes))
+  (let [id       (get opts :id)
+        selector (util/node-selector id prev-classes)
+        node     (js/d3.select selector)
+        class    (get piece :class)]
+    (-> node
+        (.append "g")
+        (.attr "class" class))
+    (data/data-enter piece opts prev-classes)
+    (data/data-update-on-did-mount piece opts prev-classes)
+    (data/data-exit piece opts prev-classes)))
 
 
 (defn- raw-did-mount [piece opts]
@@ -138,8 +146,10 @@
                                  (fn [node ratom]
                                    node))
         node                 (js/d3.select (str (util/node-selector id prev-classes)
-                                                " " tag "." class))]
-    (did-update node ratom)))
+                                                " ." class))]
+    (-> node
+        (.select tag)
+        (did-update ratom))))
 
 
 (defn- elem-with-data-did-update [piece opts prev-classes]

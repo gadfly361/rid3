@@ -99,7 +99,6 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 | :did-mount  | (fn [ratom] ...) |         | yes       |
 | :did-update | (fn [ratom] ...) |         | yes       |
 
-
 ## Joy Rid3 (Minimal Example)
 
 Just so you can get a sense of a `viz`component, let's create a minimal example ...  a circle with text on top of it.
@@ -109,7 +108,7 @@ Just so you can get a sense of a `viz`component, let's create a minimal example 
 Add the following to the `:dependencies` vector of your project.clj file.
 
 ```clojure
-[rid3 "0.1.0-alpha-3"]
+[rid3 "0.2.0"]
 ```
 
 ### Require rid3 in your namespace
@@ -181,8 +180,10 @@ Which will result in the following:
 <div id="some-id">
   <svg width="200" height="200" style="background-color: grey;">
     <g class="rid3-main-container">
-	<circle class="background" cx="100" cy="100" r="50">
+      <g class="backround">
+	<circle cx="100" cy="100" r="50">
 	</circle>
+      </g>
     </g>
   </svg>
 </div>
@@ -235,20 +236,20 @@ Which will result in the following:
 <div id="some-id">
   <svg width="200" height="200" style="background-color: grey;">
     <g class="rid3-main-container">
-	<circle class="background" cx="100" cy="100" r="50">
+      <g class="backround">
+	<circle cx="100" cy="100" r="50">
 	</circle>
-	<text class="foreground" x="100" y="100" text-anchor="middle" alignment-baseline="middle" fill="green" font-size="24px" font-family="sans-serif">RID3
+      </g>
+      <g class="foreground">
+	<text x="100" y="100" text-anchor="middle" alignment-baseline="middle" fill="green" font-size="24px" font-family="sans-serif">RID3
 	</text>
+      </g>
     </g>
   </svg>
 </div>
 ```
 
 *Note: the order of pieces matters.  If we reversed the order of our text and circle, we wouldn't be able to see the text (because it would be behind the circle).*
-
----
-
-TODO: complete documentation.
 
 ---
 

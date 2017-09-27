@@ -16,18 +16,17 @@
         selector         (util/node-selector id prev-classes)
         node             (js/d3.select selector)]
     (-> node
-        (.selectAll (str tag "." class))
+        (.select (str "." class))
+        (.selectAll tag)
         (.data dataset key-fn))))
 
 
 
 (defn- data-enter [piece opts prev-classes]
-  (let [{:keys [tag
-                class]} piece]
+  (let [{:keys [tag]} piece]
     (-> (data-join piece opts prev-classes)
         .enter
-        (.append tag)
-        (.attr "class" class))))
+        (.append tag))))
 
 
 (defn- data-update-on-did-mount [piece opts prev-classes]

@@ -102,11 +102,13 @@
      [:br]
      [:br]
 
-     [barchart/example barchart-cursor]
-     [barchart2/example barchart2-cursor]
-     [barchart3/example barchart3-cursor]
-     [pie/example pie-cursor]
-     [arc-tween/example arc-tween-cursor]
+     (when page-width
+       [:section
+        [barchart/example barchart-cursor]
+        [barchart2/example barchart2-cursor]
+        [barchart3/example barchart3-cursor]
+        [pie/example pie-cursor]
+        [arc-tween/example arc-tween-cursor]])
 
      [:div
       {:style {:margin-top "200px"}}]
