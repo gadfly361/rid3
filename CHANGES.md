@@ -1,6 +1,6 @@
 # Changes
 
-## 0.2.0 (2017-09-26)
+## 0.2.0 (2017-09-27)
 
 - add `:key-fn` to `:elem-with-data` piece
 - remove `:children` from `:elem` piece

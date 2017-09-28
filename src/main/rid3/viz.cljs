@@ -14,6 +14,11 @@
 
 
 (defn- component-did-mount [opts]
+
+  ;; TODO: remove notice in v0.3.0
+  (when (get opts :prepare-dataset)
+    (js/console.warn (str "[rid3] using :prepare-dataset at the top-level has been deprecated. Please move :prepare-dataset inside of your :elem-with-data pieces.")))
+
   (svg/svg-did-mount opts)
   (main-container/main-container-did-mount opts)
 
