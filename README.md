@@ -89,7 +89,7 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 | :tag             | string                |                                                 | yes       |
 | :did-mount       | (fn [node ratom] ...) |                                                 | yes       |
 | :did-update      | (fn [node ratom] ...) | did-mount                                       | no        |
-| :prepate-dataset | (fn [ratom] ...)      | (fn [ratom] (-> @ratom (get :dataset) clj->js)) | no        |
+| :prepare-dataset | (fn [ratom] ...)      | (fn [ratom] (-> @ratom (get :dataset) clj->js)) | no        |
 | :key-fn          | (fn [d i] ...)        |                                                 | no        |
 
 - `:raw` for when you want to either trigger some side-effect or have an escape hatch from the rid3
