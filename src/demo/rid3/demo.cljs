@@ -133,7 +133,7 @@
                 client-width (some-> js/document .-body .-clientWidth)
                 page-width   (or inner-width client-width)]
 
-            (swap! app-cursor  assoc
+            (swap! ratom  assoc
                    :page-width page-width
                    :mobile? mobile?)))]
     (set-size!)
