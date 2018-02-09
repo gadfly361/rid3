@@ -63,7 +63,7 @@ Where a main-container hash-map looks like:
 
 And where :pieces is a vector of piece hash-maps.  There are four kinds of piece hash-maps:
 
-- `:container` for when you want to group *elem* or *elem-with-data* pieces under the same g tag.
+**`:container`** for when you want to group *elem* or *elem-with-data* pieces under the same g tag.
 
 | key         | type                  | default   | required? |
 |-------------|-----------------------|-----------|-----------|
@@ -72,7 +72,7 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 | :did-update | (fn [node ratom] ...) | did-mount | no        |
 | :children   | [ piece ]             |           | no        |
 
-- `:elem` for when you want to add an element like a text or a circle.
+**`:elem`** for when you want to add an element like a text or a circle.
 
 | key         | type                  | default   | required? |
 |-------------|-----------------------|-----------|-----------|
@@ -81,7 +81,7 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 | :did-mount  | (fn [node ratom] ...) |           | yes       |
 | :did-update | (fn [node ratom] ...) | did-mount | no        |
 
-- `:elem-with-data` for when you want to add a series of elements that are joined to a dataset
+**`:elem-with-data`** for when you want to add a series of elements that are joined to a dataset.
 
 | key              | type                  | default                                         | required? |
 |------------------|-----------------------|-------------------------------------------------|-----------|
@@ -92,7 +92,15 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 | :prepare-dataset | (fn [ratom] ...)      | (fn [ratom] (-> @ratom (get :dataset) clj->js)) | no        |
 | :key-fn          | (fn [d i] ...)        |                                                 | no        |
 
-- `:raw` for when you want to either trigger some side-effect or have an escape hatch from the rid3
+ - Note that `:elem-with-data` expects what is returned by the
+   `:prepare-dataset` function to be a JavaScript array. E.g. `[1, 2, 3]` or
+   `[{"color": "blue"}, {"color": "green"} ... ]`
+
+ - Individual elements of the array are passed to the anonymous functions that
+   set properties of each `:elem-with-data` element. E.g. `(.attr node "color"
+   (fn [elem] (aget elem "color")))`
+
+**`:raw`** for when you want to either trigger some side-effect or have an escape hatch from the rid3
 
 | key         | type             | default | required? |
 |-------------|------------------|---------|-----------|
