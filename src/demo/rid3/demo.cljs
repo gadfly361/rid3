@@ -162,4 +162,4 @@
 (defn ^:export main []
   (dev-setup)
   (reload)
-  (window-size app-state))
+  (window-size app-cursor))
