@@ -95,11 +95,12 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
  - Note that `:elem-with-data` expects what is returned by the
    `:prepare-dataset` function to be a JavaScript array. E.g. `[1, 2, 3]` or
    `[{"color": "blue"}, {"color": "green"} ... ]`
-       - If `:prepare-dataset` is not provided, then (as a default)`:elem-with-data` will convert whatever is stored in the `:dataset` key of your `ratom` to a JavaScript array.
+   
+ - If `:prepare-dataset` is not provided, then (as a default)`:elem-with-data` will convert whatever is stored in the `:dataset` key of your `ratom` to a JavaScript array.
 
- - Individual elements of the JavaScript array are passed to the anonymous functions that
-   set properties of each `:elem-with-data` datum. E.g. `(.attr node "color"
-   (fn [d] (aget d "color")))`
+ - Individual datums (often referred to as "d") of the JavaScript array are passed to the anonymous functions that
+   can be used to set properties of each `:elem-with-data` element. E.g. `(.attr node "color"
+   (fn [d] (goog.object/get d "color")))`
 
 **`:raw`** for when you want to either trigger some side-effect or have an escape hatch from the rid3
 
