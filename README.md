@@ -2,7 +2,9 @@
 
 Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to [**d3**](https://d3js.org/).
 
-[demo](http://rid3.s3-website-us-west-1.amazonaws.com/)
+[basics](http://rawgit.com/gadfly361/rid3/master/dev-resources/public/basics.html)
+
+[examples](http://rawgit.com/gadfly361/rid3/master/dev-resources/public/examples.html)
 
 [clojure meetup slides](http://rawgit.com/gadfly361/rid3/master/docs/cph_meetup/rid3_intro.html) based on v0.1.0-alpha-3.
 
@@ -263,7 +265,11 @@ Which will result in the following:
 
 ---
 
-Please check out the [demo](http://rid3.s3-website-us-west-1.amazonaws.com/) and its [source](https://github.com/gadfly361/rid3/tree/master/src/demo/rid3)
+Don't forget to check out the following:
+
+[basics](http://rawgit.com/gadfly361/rid3/master/dev-resources/public/basics.html)
+
+[examples](http://rawgit.com/gadfly361/rid3/master/dev-resources/public/examples.html)
 
 ## License
 
