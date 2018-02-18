@@ -2,9 +2,11 @@
 
 Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to [**d3**](https://d3js.org/).
 
-[demo](http://rid3.s3-website-us-west-1.amazonaws.com/)
+[basics](http://rawgit.com/gadfly361/rid3/v0.2.0/dev-resources/public/basics.html)
 
-[clojure meetup slides](http://rawgit.com/gadfly361/rid3/master/docs/cph_meetup/rid3_intro.html) based on v0.1.0-alpha-3.
+[examples](http://rawgit.com/gadfly361/rid3/v0.2.0/dev-resources/public/examples.html)
+
+[clojure meetup slides](http://rawgit.com/gadfly361/rid3/v0.2.0/docs/cph_meetup/rid3_intro.html) based on v0.1.0-alpha-3.
 
 To use rid3, add the following to the `:dependencies` vector in your project.clj file:
 
@@ -14,8 +16,8 @@ To use rid3, add the following to the `:dependencies` vector in your project.clj
 
 Using an older version?
 
-- [Migrating from v0.1.0-alpha-3?](https://github.com/gadfly361/rid3/blob/master/CHANGES.md)
-- [Previous docs](https://github.com/gadfly361/rid3/tree/master/docs/READMEs)
+- [Migrating from v0.1.0-alpha-3?](https://github.com/gadfly361/rid3/blob/v0.2.0/CHANGES.md)
+- [Previous docs](https://github.com/gadfly361/rid3/tree/v0.2.0/docs/READMEs)
 
 ## The Problem
 
@@ -253,7 +255,11 @@ Which will result in the following:
 
 ---
 
-Please check out the [demo](http://rid3.s3-website-us-west-1.amazonaws.com/) and its [source](https://github.com/gadfly361/rid3/tree/master/src/demo/rid3)
+Don't forget to check out the following:
+
+[basics](http://rawgit.com/gadfly361/rid3/v0.2.0/dev-resources/public/basics.html)
+
+[examples](http://rawgit.com/gadfly361/rid3/v0.2.0/dev-resources/public/examples.html)
 
 ## License
 

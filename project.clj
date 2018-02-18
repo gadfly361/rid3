@@ -23,14 +23,15 @@
 
   :cljsbuild
   {:builds
-   [{:id           "dev"
-     :source-paths ["src/demo" "src/main"]
-     :figwheel     {:on-jsload "rid3.demo/reload"}
-     :compiler     {:main                 rid3.demo
+   [;; basics
+    {:id           "basics-dev"
+     :source-paths ["src/basics" "src/main" "src/version"]
+     :figwheel     {:on-jsload "rid3.basics/reload"}
+     :compiler     {:main                 rid3.basics
                     :optimizations        :none
-                    :output-to            "dev-resources/public/js/app.js"
-                    :output-dir           "dev-resources/public/js/dev"
-                    :asset-path           "js/dev"
+                    :output-to            "dev-resources/public/js/basics.js"
+                    :output-dir           "dev-resources/public/js/basics-dev"
+                    :asset-path           "js/basics-dev"
                     :source-map-timestamp true
                     :preloads             [devtools.preload]
                     :external-config
@@ -39,15 +40,43 @@
                       :fn-symbol              "F"
                       :print-config-overrides true}}}}
 
-    {:id           "min"
-     :source-paths ["src/demo" "src/main"]
-     :compiler     {:main            rid3.demo
+    {:id           "basics-min"
+     :source-paths ["src/basics" "src/main"  "src/version"]
+     :compiler     {:main            rid3.basics
                     :optimizations   :advanced
-                    :output-to       "dev-resources/public/js/app.js"
-                    :output-dir      "dev-resources/public/js/min"
+                    :output-to       "dev-resources/public/js/basics.js"
+                    :output-dir      "dev-resources/public/js/basics-min"
                     :externs         ["externs.js"]
                     :elide-asserts   true
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}
 
+
+    ;; examples
+    {:id           "examples-dev"
+     :source-paths ["src/examples" "src/main" "src/version"]
+     :figwheel     {:on-jsload "rid3.examples/reload"}
+     :compiler     {:main                 rid3.examples
+                    :optimizations        :none
+                    :output-to            "dev-resources/public/js/examples.js"
+                    :output-dir           "dev-resources/public/js/examples-dev"
+                    :asset-path           "js/examples-dev"
+                    :source-map-timestamp true
+                    :preloads             [devtools.preload]
+                    :external-config
+                    {:devtools/config
+                     {:features-to-install    [:formatters :hints]
+                      :fn-symbol              "F"
+                      :print-config-overrides true}}}}
+
+    {:id           "examples-min"
+     :source-paths ["src/examples" "src/main"  "src/version"]
+     :compiler     {:main            rid3.examples
+                    :optimizations   :advanced
+                    :output-to       "dev-resources/public/js/examples.js"
+                    :output-dir      "dev-resources/public/js/examples-min"
+                    :externs         ["externs.js"]
+                    :elide-asserts   true
+                    :closure-defines {goog.DEBUG false}
+                    :pretty-print    false}}
     ]})
