@@ -5,7 +5,9 @@
    [re-frisk.core :as rf]
    [rid3.pie-simple :as pie-simple]
    [rid3.bar-simple :as bar-simple]
+   [rid3.bar-intermediate :as bar-intermediate]
    [rid3.scatter-simple :as scatter-simple]
+   [rid3.scatter-intermediate :as scatter-intermediate]
    ))
 
 
@@ -29,12 +31,16 @@
 
    [:section
     [:h3 "Bar Chart"]
-    [bar-simple/example app-state]
+    [:div.flex-container.flex-wrap
+     [bar-simple/example app-state]
+     [bar-intermediate/example app-state]]
     ]
 
    [:section
     [:h3 "Scatter plot"]
-    [scatter-simple/example app-state]
+    [:div.flex-container.flex-wrap
+     [scatter-simple/example app-state]
+     [scatter-intermediate/example app-state]]
     ]
 
    [:section
@@ -66,6 +72,16 @@
     button {
     margin:0;
     }
+
+    .flex-container{
+     display:-ms-flexbox;
+     display:flex
+     }
+
+    .flex-container.flex-wrap{
+     -ms-flex-wrap:wrap;
+     flex-wrap:wrap
+     }
     "]
 
 

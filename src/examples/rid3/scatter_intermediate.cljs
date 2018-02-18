@@ -1,4 +1,4 @@
-(ns rid3.scatter-simple
+(ns rid3.scatter-intermediate
   (:require
    [reagent.core :as reagent]
    [rid3.core :as rid3]
@@ -6,7 +6,7 @@
    [goog.object :as gobj]
    ))
 
-(def cursor-key :scatter-simple)
+(def cursor-key :scatter-intermediate)
 
 (def height 140)
 (def width 260)
@@ -70,6 +70,97 @@
 
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Axes
+
+(defn lighten-axis [node]
+  ;; lighten path
+  (-> node
+      (.select "path")
+      (.style "stroke" "lightgrey"))
+
+  ;; light text
+  (-> node
+      (.selectAll ".tick text")
+      (.style "fill" "#404040"))
+
+  ;; light line
+  (-> node
+      (.selectAll ".tick line")
+      (.style "stroke" "lightgrey")))
+
+(defn x-axis-did-mount [node ratom]
+  (let [x-scale (->x-scale ratom)]
+    (-> node
+        (.attr "transform" (translate 0 height))
+        (.call (.axisBottom js/d3 x-scale)))
+    (-> node
+        (.selectAll "text")
+        (.attr "dx" "-1.7em")
+        (.attr "dy" "-0.1em")
+        (.attr "transform" "rotate(-60)"))
+    (lighten-axis node)))
+
+
+(defn ->y-axis [did-mount?]
+  (fn [node ratom]
+    (let [y-scale (->y-scale ratom)]
+
+      ;; create axis
+      (if did-mount?
+        (-> node
+            (.call (-> (.axisLeft js/d3 y-scale)
+                       (.ticks 4))))
+        ;; Add did-update version that transitions on re-render (i.e.,
+        ;; when data changes)
+        (-> node
+            .transition
+            (.duration transition-duration)
+            (.call (-> (.axisLeft js/d3 y-scale)
+                       (.ticks 3)))))
+
+      (lighten-axis node))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; dots
+
+(defn ->dots [did-mount?]
+  (fn [node ratom]
+    (let [y-scale (->y-scale ratom)
+          x-scale (->x-scale ratom)]
+      (-> node
+          ;; common
+          (.attr "r" 4)
+          (.attr "fill" "#3366CC")
+          (.attr "cx" (fn [d]
+                        (let [label (gobj/get d "label")]
+                          (x-scale label)))))
+
+      (if did-mount?
+        ;; did-mount
+        (-> node
+            (.attr "cy" (fn [d]
+                          (let [value (gobj/get d "value")]
+                            (y-scale value))))
+            (.attr "opacity" 0)
+            .transition
+            (.duration transition-duration)
+            (.attr "opacity" 1))
+
+        ;; did-update
+        (-> node
+            .transition
+            (.duration transition-duration)
+            (.attr "cy" (fn [d]
+                          (let [value (gobj/get d "value")]
+                            (y-scale value))))))
+      )))
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Example
 
@@ -78,14 +169,14 @@
     (reset! viz-ratom {:dataset (->mock-dataset)})
     (fn [app-state]
       [:div
-       [:h4 "Simple Scatter Plot"]
+       [:h4 "Intermediate Scatter Plot"]
        [util/link-source (name cursor-key)]
        [:button
         {:on-click #(swap! viz-ratom assoc :dataset (->mock-dataset))}
         "Randomize data"]
 
        [rid3/viz
-        {:id    "scatter-simple"
+        {:id    "scatter-intermediate"
          :ratom viz-ratom
          :svg   {:did-mount
                  (fn [node ratom]
@@ -104,46 +195,21 @@
                                                     (get margin :left)
                                                     (get margin :right)))))}
          :pieces
-         [{:kind  :container
-           :class "x-axis"
-           :did-mount
-           (fn [node ratom]
-             (let [x-scale (->x-scale ratom)]
-               (-> node
-                   (.attr "transform" (translate 0 height))
-                   (.call (-> (.axisBottom js/d3 x-scale)))
-                   (.selectAll "text")
-                   (.attr "dx" "-1.7em")
-                   (.attr "dy" "-0.1em")
-                   (.attr "transform" "rotate(-60)"))))}
+         [{:kind      :container
+           :class     "x-axis"
+           :did-mount x-axis-did-mount}
 
-          {:kind  :container
-           :class "y-axis"
-           :did-mount
-           (fn [node ratom]
-             (let [y-scale (->y-scale ratom)]
-               (-> node
-                   (.call (-> (.axisLeft js/d3 y-scale)
-                              (.ticks 4))))))}
+          {:kind       :container
+           :class      "y-axis"
+           :did-mount  (->y-axis true)
+           :did-update (->y-axis false)}
 
           {:kind            :elem-with-data
            :class           "dots"
            :tag             "circle"
            :prepare-dataset prepare-dataset
-           :did-mount
-           (fn [node ratom]
-             (let [y-scale (->y-scale ratom)
-                   x-scale (->x-scale ratom)]
-               (-> node
-                   (.attr "cx" (fn [d]
-                                (let [label (gobj/get d "label")]
-                                  (x-scale label))))
-                   (.attr "cy" (fn [d]
-                                (let [value (gobj/get d "value")]
-                                  (y-scale value))))
-                   (.attr "r" 4)
-                   (.attr "fill" "#3366CC")
-                   )))
+           :did-mount       (->dots true)
+           :did-update      (->dots false)
            }]
          }]
        ])))

@@ -29,7 +29,7 @@
      :figwheel     {:on-jsload "rid3.basics/reload"}
      :compiler     {:main                 rid3.basics
                     :optimizations        :none
-                    :output-to            "dev-resources/public/js/basics.js"
+                    :output-to            "dev-resources/public/js/basics-dev.js"
                     :output-dir           "dev-resources/public/js/basics-dev"
                     :asset-path           "js/basics-dev"
                     :source-map-timestamp true
@@ -58,7 +58,7 @@
      :figwheel     {:on-jsload "rid3.examples/reload"}
      :compiler     {:main                 rid3.examples
                     :optimizations        :none
-                    :output-to            "dev-resources/public/js/examples.js"
+                    :output-to            "dev-resources/public/js/examples-dev.js"
                     :output-dir           "dev-resources/public/js/examples-dev"
                     :asset-path           "js/examples-dev"
                     :source-map-timestamp true

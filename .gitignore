@@ -2,6 +2,9 @@
 /target
 /*-init.clj
 /dev-resources/public/js/*min
+/dev-resources/public/js/*dev
+/dev-resources/public/js/examples-dev.js
+/dev-resources/public/js/basics-dev.js
 out
 *.*~
 

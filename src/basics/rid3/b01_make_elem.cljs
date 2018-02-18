@@ -29,7 +29,7 @@
                                 (.attr "height" height)
                                 (.attr "width" width)))}
 
-         ;; This of pieces as the things you are drawing on your
+         ;; Think of pieces as the things you are drawing on your
          ;; whiteboard.
          :pieces
          [{:kind      :elem

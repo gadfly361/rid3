@@ -1,4 +1,4 @@
-(ns rid3.bar-simple
+(ns rid3.bar-intermediate
   (:require
    [reagent.core :as reagent]
    [rid3.core :as rid3]
@@ -6,7 +6,7 @@
    [goog.object :as gobj]
    ))
 
-(def cursor-key :bar-simple)
+(def cursor-key :bar-intermediate)
 
 (def height 140)
 (def width 260)
@@ -28,6 +28,8 @@
       (.scaleOrdinal #js ["#3366CC"
                           "#DC3912"
                           "#FF9900"])))
+
+(def transition-duration 800)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,6 +69,92 @@
         (.domain #js [0 max-value]))))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Axes
+
+(defn lighten-axis [node]
+  ;; lighten path
+  (-> node
+      (.select "path")
+      (.style "stroke" "lightgrey"))
+
+  ;; light text
+  (-> node
+      (.selectAll ".tick text")
+      (.style "fill" "#404040"))
+
+  ;; light line
+  (-> node
+      (.selectAll ".tick line")
+      (.style "stroke" "lightgrey")))
+
+
+(defn x-axis-did-mount [node ratom]
+  (let [x-scale (->x-scale ratom)]
+    (-> node
+        (.attr "transform" (translate 0 height))
+        (.call (.axisBottom js/d3 x-scale)))
+    (lighten-axis node)))
+
+
+(defn ->y-axis [did-mount?]
+  (fn [node ratom]
+    (let [y-scale (->y-scale ratom)]
+
+      ;; create axis
+      (if did-mount?
+        (-> node
+            (.call (-> (.axisLeft js/d3 y-scale)
+                       (.ticks 3))))
+        ;; Add did-update version that transitions on re-render (i.e.,
+        ;; when data changes)
+        (-> node
+            .transition
+            (.duration transition-duration)
+            (.call (-> (.axisLeft js/d3 y-scale)
+                       (.ticks 3)))))
+
+      (lighten-axis node)
+      )))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Bars
+
+(defn ->bars [did-mount?]
+  (fn [node ratom]
+    (let [y-scale (->y-scale ratom)
+          x-scale (->x-scale ratom)]
+
+      ;; common
+      (-> node
+          (.attr "x" (fn [d]
+                       (let [label (gobj/get d "label")]
+                         (x-scale label))))
+          (.attr "fill" (fn [d i]
+                          (color i)))
+          (.attr "width" (.bandwidth x-scale)))
+
+      ;; only for did-mount, set have bars grow from x-axis
+      (when did-mount?
+        (-> node
+            (.attr "height" 0)
+            (.attr "y" height)))
+
+      ;; add transition to bars height on page load and when data
+      ;; changes
+      (-> node
+          .transition
+          (.duration transition-duration)
+          (.attr "height" (fn [d]
+                            (let [value (gobj/get d "value")]
+                              (- height
+                                 (y-scale value)))))
+          (.attr "y" (fn [d]
+                       (let [value (gobj/get d "value")]
+                         (y-scale value))))))))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Example
@@ -76,14 +164,14 @@
     (reset! viz-ratom {:dataset (->mock-dataset)})
     (fn [app-state]
       [:div
-       [:h4 "Simple Bar Chart"]
+       [:h4 "Intermediate Bar Chart"]
        [util/link-source (name cursor-key)]
        [:button
         {:on-click #(swap! viz-ratom assoc :dataset (->mock-dataset))}
         "Randomize data"]
 
        [rid3/viz
-        {:id    "bar-simple"
+        {:id    "bar-intermediate"
          :ratom viz-ratom
          :svg   {:did-mount
                  (fn [node ratom]
@@ -104,44 +192,19 @@
          :pieces
          [{:kind      :container
            :class     "x-axis"
-           :did-mount
-           (fn [node ratom]
-             (let [x-scale (->x-scale ratom)]
-               (-> node
-                   (.attr "transform" (translate 0 height))
-                   (.call (.axisBottom js/d3 x-scale)))))}
+           :did-mount x-axis-did-mount}
 
           {:kind  :container
            :class "y-axis"
-           :did-mount
-           (fn [node ratom]
-             (let [y-scale (->y-scale ratom)]
-               (-> node
-                   (.call (-> (.axisLeft js/d3 y-scale)
-                              (.ticks 3))))))}
+           :did-mount (->y-axis true)
+           :did-update (->y-axis false)}
 
           {:kind            :elem-with-data
            :class           "bars"
            :tag             "rect"
            :prepare-dataset prepare-dataset
-           :did-mount
-           (fn [node ratom]
-             (let [y-scale (->y-scale ratom)
-                   x-scale (->x-scale ratom)]
-               (-> node
-                   (.attr "x" (fn [d]
-                                (let [label (gobj/get d "label")]
-                                  (x-scale label))))
-                   (.attr "width" (.bandwidth x-scale))
-                   (.attr "fill" (fn [d i]
-                                   (color i)))
-                   (.attr "height" (fn [d]
-                                     (let [value (gobj/get d "value")]
-                                       (- height
-                                          (y-scale value)))))
-                   (.attr "y" (fn [d]
-                                (let [value (gobj/get d "value")]
-                                  (y-scale value)))))))
+           :did-mount (->bars true)
+           :did-update (->bars false)
            }]
          }]
        ])))
