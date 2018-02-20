@@ -17,7 +17,8 @@
   {:dev
    {:dependencies [[binaryage/devtools "0.8.2"]
                    [re-frisk "0.3.1"]
-                   [garden "1.3.2"]]
+                   [garden "1.3.2"]
+                   [etaoin "0.2.7"]]
     :plugins      [[lein-figwheel "0.5.10"]
                    [lein-externs "0.1.6"]]}}
 
@@ -79,4 +80,21 @@
                     :elide-asserts   true
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}
+
+    ;; integration
+    {:id           "integration-dev"
+     :source-paths ["src/integration" "src/main" "src/version"]
+     :figwheel     {:on-jsload "rid3.integration/reload"}
+     :compiler     {:main                 rid3.integration
+                    :optimizations        :none
+                    :output-to            "dev-resources/public/js/integration.js"
+                    :output-dir           "dev-resources/public/js/integration-dev"
+                    :asset-path           "js/integration-dev"
+                    :source-map-timestamp true
+                    :preloads             [devtools.preload]
+                    :external-config
+                    {:devtools/config
+                     {:features-to-install    [:formatters :hints]
+                      :fn-symbol              "F"
+                      :print-config-overrides true}}}}
     ]})

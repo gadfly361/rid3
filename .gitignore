@@ -5,8 +5,12 @@
 /dev-resources/public/js/*dev
 /dev-resources/public/js/examples-dev.js
 /dev-resources/public/js/basics-dev.js
+/dev-resources/public/js/integration.js
+/screenshots/*
 out
 *.*~
+
+.lein-failures
 
 
 pom.xml
