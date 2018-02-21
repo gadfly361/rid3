@@ -23,8 +23,9 @@
 
          :svg {:did-mount (fn [node ratom]
                             (-> node
-                                (.attr "height" height)
-                                (.attr "width" width)))}
+                                (rid3/attrs
+                                 {:height height
+                                  :width  width})))}
 
          :pieces
          [{:kind      :elem
@@ -32,13 +33,14 @@
            :tag       "rect"
            :did-mount (fn [node ratom]
                         (-> node
-                            (.attr "x" 0)
-                            (.attr "y" 0)
-                            (.attr "height" height)
-                            (.attr "width" width)
-                            (.attr "fill" "lightgrey")
-                            (.attr "stroke" "grey")
-                            (.attr "stroke-width" 2)))}
+                            (rid3/attrs
+                             {:x            0
+                              :y            0
+                              :height       height
+                              :width        width
+                              :fill         "lightgrey"
+                              :stroke       "grey"
+                              :stroke-width 2})))}
 
           ;; You can add any number of elements. They are added in
           ;; order, which means this circle overlaid on top of the
@@ -48,8 +50,9 @@
            :tag       "circle"
            :did-mount (fn [node ratom]
                         (-> node
-                            (.attr "cx" (/ width 2))
-                            (.attr "cy" (/ height 2))
-                            (.attr "r" 20)
-                            (.attr "fill" "green")))}]
-         }]])))
+                            (rid3/attrs
+                             {:cx   (/ width 2)
+                              :cy   (/ height 2)
+                              :r    20
+                              :fill "green"})))}
+          ]}]])))

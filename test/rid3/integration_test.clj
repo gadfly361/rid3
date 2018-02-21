@@ -138,6 +138,34 @@
             (is (= "rect"
                    (get-element-tag-el *driver* rect))))))
 
+      ;; :elem
+      (testing "a text (:elem piece) should have set attrs and styles"
+        (is (= ["50" "50" "20" "middle"]
+             (get-element-attrs
+              *driver*
+              {:css (string/join " "
+                                 ["#test1"
+                                  "svg"
+                                  "g.rid3-main-container"
+                                  "g.my-text"
+                                  "text"])}
+              "x"
+              "y"
+              "font-size"
+              "text-anchor")))
+
+        (is (= ["500" "sans-serif"]
+               (get-element-csss
+                *driver*
+                {:css (string/join " "
+                                   ["#test1"
+                                    "svg"
+                                    "g.rid3-main-container"
+                                    "g.my-text"
+                                    "text"])}
+                "font-weight"
+                "font-family")))
+        )
 
       )))
 

@@ -90,19 +90,21 @@
          :svg   {:did-mount
                  (fn [node ratom]
                    (-> node
-                       (.attr "width" (+ width
-                                         (get margin :left)
-                                         (get margin :right)))
-                       (.attr "height" (+ height
-                                          (get margin :top)
-                                          (get margin :bottom)))))}
+                       (rid3/attrs
+                        {:width  (+ width
+                                    (get margin :left)
+                                    (get margin :right))
+                         :height (+ height
+                                    (get margin :top)
+                                    (get margin :bottom))})))}
 
          :main-container {:did-mount
                           (fn [node ratom]
                             (-> node
-                                (.attr "transform" (translate
-                                                    (get margin :left)
-                                                    (get margin :right)))))}
+                                (rid3/attrs
+                                 {:transform (translate
+                                              (get margin :left)
+                                              (get margin :right))})))}
          :pieces
          [{:kind  :container
            :class "x-axis"
@@ -110,12 +112,14 @@
            (fn [node ratom]
              (let [x-scale (->x-scale ratom)]
                (-> node
-                   (.attr "transform" (translate 0 height))
+                   (rid3/attrs
+                    {:transform (translate 0 height)})
                    (.call (-> (.axisBottom js/d3 x-scale)))
                    (.selectAll "text")
-                   (.attr "dx" "-1.7em")
-                   (.attr "dy" "-0.1em")
-                   (.attr "transform" "rotate(-60)"))))}
+                   (rid3/attrs
+                    {:dx        "-1.7em"
+                     :dy        "-0.1em"
+                     :transform "rotate(-60)"}))))}
 
           {:kind  :container
            :class "y-axis"
@@ -135,15 +139,13 @@
              (let [y-scale (->y-scale ratom)
                    x-scale (->x-scale ratom)]
                (-> node
-                   (.attr "cx" (fn [d]
-                                (let [label (gobj/get d "label")]
-                                  (x-scale label))))
-                   (.attr "cy" (fn [d]
-                                (let [value (gobj/get d "value")]
-                                  (y-scale value))))
-                   (.attr "r" 4)
-                   (.attr "fill" "#3366CC")
-                   )))
-           }]
-         }]
-       ])))
+                   (rid3/attrs
+                    {:cx   (fn [d]
+                             (let [label (gobj/get d "label")]
+                               (x-scale label)))
+                     :cy   (fn [d]
+                             (let [value (gobj/get d "value")]
+                               (y-scale value)))
+                     :r    4
+                     :fill "#3366CC"}))))}
+          ]}]])))

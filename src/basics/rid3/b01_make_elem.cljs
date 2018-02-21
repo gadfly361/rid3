@@ -26,8 +26,9 @@
          ;; going to draw stuff on
          :svg {:did-mount (fn [node ratom]
                             (-> node
-                                (.attr "height" height)
-                                (.attr "width" width)))}
+                                (rid3/attrs
+                                 {:height height
+                                  :width  width})))}
 
          ;; Think of pieces as the things you are drawing on your
          ;; whiteboard.
@@ -37,9 +38,10 @@
            :tag       "rect"
            :did-mount (fn [node ratom]
                         (-> node
-                            (.attr "x" 0)
-                            (.attr "y" 0)
-                            (.attr "height" height)
-                            (.attr "width" width)))
-           }]
+                            (rid3/attrs
+                             {:x      0
+                              :y      0
+                              :height height
+                              :width  width})))}
+          ]
          }]])))

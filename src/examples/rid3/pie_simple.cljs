@@ -55,10 +55,11 @@
 (defn wedges-did-mount [node ratom]
   (let [wedge (->wedge ratom)]
     (-> node
-        (.attr "d" wedge)
-        (.attr "fill" (fn [d i]
-                        (color i)))
-        (.style "stroke" "#FFF"))))
+        (rid3/attrs
+         {:d     wedge
+          :fill  (fn [d i]
+                   (color i))
+          :style {:stroke "#FFF"}}))))
 
 
 
@@ -78,11 +79,12 @@
                        (mapv :value)
                        (apply +))]
     (-> node
-        (.attr "transform" (fn [d]
-                             (str "translate(" (.centroid label d) ")")))
-        (.attr "dy" "2px")
-        (.style "font" "10px sans-serif")
-        (.style "text-anchor" "middle")
+        (rid3/attrs
+         {:transform (fn [d]
+                       (str "translate(" (.centroid label d) ")"))
+          :dy        "2px"
+          :style     {:font        "10px sans-serif"
+                      :text-anchor "middle"}})
         (.text (fn [d]
                  (let [value (aget d "data" "value")]
                    (str (some-> value
@@ -113,17 +115,20 @@
          :svg   {:did-mount
                  (fn [node ratom]
                    (-> node
-                       (.attr "height" height)
-                       (.attr "width" width)))}
+                       (rid3/attrs
+                        {:height height
+                         :width  width})))}
 
          :main-container {:did-mount
                           (fn [node ratom]
                             (-> node
-                                (.attr "transform" (str "translate("
-                                                        (/ width 2)
-                                                        ","
-                                                        (/ height 2)
-                                                        ")"))))}
+                                (rid3/attrs
+                                 {:transform (str "translate("
+                                                  (/ width 2)
+                                                  ","
+                                                  (/ height 2)
+                                                  ")")})))}
+
          :pieces
          [{:kind            :elem-with-data
            :class           "wedges"

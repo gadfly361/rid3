@@ -27,8 +27,9 @@
 
          :svg {:did-mount (fn [node ratom]
                             (-> node
-                                (.attr "height" height)
-                                (.attr "width" width)))}
+                                (rid3/attrs
+                                 {:height height
+                                  :width  width})))}
 
          :pieces
          [{:kind            :elem-with-data
@@ -50,11 +51,11 @@
                                                   (.rangeRound #js [0 width])
                                                   (.domain #js [0 dataset-n]))]
                                 (-> node
-                                    (.attr "x" (fn [d i]
-                                                 (x-scale i)))
-                                    (.attr "y" 12)
-                                    (.attr "fill" "black")
+                                    (rid3/attrs
+                                     {:x    (fn [d i]
+                                              (x-scale i))
+                                      :y    12
+                                      :fill "black"})
                                     (.text (fn [d]
-                                             d))
-                                    )))}]
-         }]])))
+                                             d)))))}
+          ]}]])))

@@ -23,8 +23,9 @@
 
          :svg {:did-mount (fn [node ratom]
                             (-> node
-                                (.attr "height" height)
-                                (.attr "width" width)))}
+                                (rid3/attrs
+                                 {:height height
+                                  :width  width})))}
 
          :pieces
          [{:kind      :elem
@@ -32,15 +33,15 @@
            :tag       "rect"
            :did-mount (fn [node ratom]
                         (-> node
-                            (.attr "x" 0)
-                            (.attr "y" 0)
-                            (.attr "height" height)
-                            (.attr "width" width)
-                            ;; You can add arbitrary attributes to
-                            ;; your element
-                            (.attr "fill" "lightgrey")
-                            (.attr "stroke" "grey")
-                            (.attr "stroke-width" 2)
-                            ))
-           }]
+                            (rid3/attrs
+                             {:x            0
+                              :y            0
+                              :height       height
+                              :width        width
+                              ;; You can add arbitrary attributes to
+                              ;; your element
+                              :fill         "lightgrey"
+                              :stroke       "grey"
+                              :stroke-width 2})))}
+          ]
          }]])))

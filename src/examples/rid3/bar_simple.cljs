@@ -85,30 +85,33 @@
        [rid3/viz
         {:id    "bar-simple"
          :ratom viz-ratom
-         :svg   {:did-mount
-                 (fn [node ratom]
-                   (-> node
-                       (.attr "width" (+ width
-                                         (get margin :left)
-                                         (get margin :right)))
-                       (.attr "height" (+ height
-                                          (get margin :top)
-                                          (get margin :bottom)))))}
+         :svg {:did-mount
+               (fn [node ratom]
+                 (-> node
+                     (rid3/attrs
+                      {:width  (+ width
+                                  (get margin :left)
+                                  (get margin :right))
+                       :height (+ height
+                                  (get margin :top)
+                                  (get margin :bottom))})))}
 
          :main-container {:did-mount
                           (fn [node ratom]
                             (-> node
-                                (.attr "transform" (translate
-                                                    (get margin :left)
-                                                    (get margin :right)))))}
+                                (rid3/attrs
+                                 {:transform (translate
+                                              (get margin :left)
+                                              (get margin :right))})))}
          :pieces
-         [{:kind      :container
-           :class     "x-axis"
+         [{:kind  :container
+           :class "x-axis"
            :did-mount
            (fn [node ratom]
              (let [x-scale (->x-scale ratom)]
                (-> node
-                   (.attr "transform" (translate 0 height))
+                   (rid3/attrs
+                    {:transform (translate 0 height)})
                    (.call (.axisBottom js/d3 x-scale)))))}
 
           {:kind  :container
@@ -129,19 +132,20 @@
              (let [y-scale (->y-scale ratom)
                    x-scale (->x-scale ratom)]
                (-> node
-                   (.attr "x" (fn [d]
-                                (let [label (gobj/get d "label")]
-                                  (x-scale label))))
-                   (.attr "width" (.bandwidth x-scale))
-                   (.attr "fill" (fn [d i]
-                                   (color i)))
-                   (.attr "height" (fn [d]
-                                     (let [value (gobj/get d "value")]
-                                       (- height
-                                          (y-scale value)))))
-                   (.attr "y" (fn [d]
-                                (let [value (gobj/get d "value")]
-                                  (y-scale value)))))))
+                   (rid3/attrs
+                    {:x      (fn [d]
+                               (let [label (gobj/get d "label")]
+                                 (x-scale label)))
+                     :width  (.bandwidth x-scale)
+                     :fill   (fn [d i]
+                               (color i))
+                     :height (fn [d]
+                               (let [value (gobj/get d "value")]
+                                 (- height
+                                    (y-scale value))))
+                     :y      (fn [d]
+                               (let [value (gobj/get d "value")]
+                                 (y-scale value)))}))))
            }]
          }]
        ])))

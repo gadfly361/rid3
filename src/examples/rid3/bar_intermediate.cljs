@@ -76,23 +76,23 @@
   ;; lighten path
   (-> node
       (.select "path")
-      (.style "stroke" "lightgrey"))
+      (rid3/attrs {:style {:stroke "lightgrey"}}))
 
   ;; light text
   (-> node
       (.selectAll ".tick text")
-      (.style "fill" "#404040"))
+      (rid3/attrs {:style {:fill "#404040"}}))
 
   ;; light line
   (-> node
       (.selectAll ".tick line")
-      (.style "stroke" "lightgrey")))
+      (rid3/attrs {:style {:stroke "lightgrey"}})))
 
 
 (defn x-axis-did-mount [node ratom]
   (let [x-scale (->x-scale ratom)]
     (-> node
-        (.attr "transform" (translate 0 height))
+        (rid3/attrs {:transform (translate 0 height)})
         (.call (.axisBottom js/d3 x-scale)))
     (lighten-axis node)))
 
@@ -128,31 +128,34 @@
 
       ;; common
       (-> node
-          (.attr "x" (fn [d]
-                       (let [label (gobj/get d "label")]
-                         (x-scale label))))
-          (.attr "fill" (fn [d i]
-                          (color i)))
-          (.attr "width" (.bandwidth x-scale)))
+          (rid3/attrs
+           {:x     (fn [d]
+                     (let [label (gobj/get d "label")]
+                       (x-scale label)))
+            :fill  (fn [d i]
+                     (color i))
+            :width (.bandwidth x-scale)}))
 
       ;; only for did-mount, set have bars grow from x-axis
       (when did-mount?
         (-> node
-            (.attr "height" 0)
-            (.attr "y" height)))
+            (rid3/attrs
+             {:height 0
+              :y      height})))
 
       ;; add transition to bars height on page load and when data
       ;; changes
       (-> node
           .transition
           (.duration transition-duration)
-          (.attr "height" (fn [d]
-                            (let [value (gobj/get d "value")]
-                              (- height
-                                 (y-scale value)))))
-          (.attr "y" (fn [d]
-                       (let [value (gobj/get d "value")]
-                         (y-scale value))))))))
+          (rid3/attrs
+           {:height (fn [d]
+                      (let [value (gobj/get d "value")]
+                        (- height
+                           (y-scale value))))
+            :y      (fn [d]
+                      (let [value (gobj/get d "value")]
+                        (y-scale value)))})))))
 
 
 
@@ -176,19 +179,21 @@
          :svg   {:did-mount
                  (fn [node ratom]
                    (-> node
-                       (.attr "width" (+ width
-                                         (get margin :left)
-                                         (get margin :right)))
-                       (.attr "height" (+ height
-                                          (get margin :top)
-                                          (get margin :bottom)))))}
+                       (rid3/attrs
+                        {:width  (+ width
+                                    (get margin :left)
+                                    (get margin :right))
+                         :height (+ height
+                                    (get margin :top)
+                                    (get margin :bottom))})))}
 
          :main-container {:did-mount
                           (fn [node ratom]
                             (-> node
-                                (.attr "transform" (translate
-                                                    (get margin :left)
-                                                    (get margin :right)))))}
+                                (rid3/attrs
+                                 {:transform (translate
+                                              (get margin :left)
+                                              (get margin :right))})))}
          :pieces
          [{:kind      :container
            :class     "x-axis"
