@@ -1,7 +1,7 @@
 (ns rid3.b04-make-elements-from-data
   (:require
    [reagent.core :as reagent]
-   [rid3.core :as rid3]
+   [rid3.core :as rid3 :refer [rid3->]]
    [rid3.basics-util :as util]
    ))
 
@@ -26,10 +26,9 @@
          :ratom viz-ratom
 
          :svg {:did-mount (fn [node ratom]
-                            (-> node
-                                (rid3/attrs
-                                 {:height height
-                                  :width  width})))}
+                            (rid3-> node
+                                    {:height height
+                                     :width  width}))}
 
          :pieces
          [{:kind            :elem-with-data
@@ -50,12 +49,11 @@
                                                   .scaleLinear
                                                   (.rangeRound #js [0 width])
                                                   (.domain #js [0 dataset-n]))]
-                                (-> node
-                                    (rid3/attrs
-                                     {:x    (fn [d i]
-                                              (x-scale i))
-                                      :y    12
-                                      :fill "black"})
+                                (rid3-> node
+                                    {:x    (fn [d i]
+                                             (x-scale i))
+                                     :y    12
+                                     :fill "black"}
                                     (.text (fn [d]
                                              d)))))}
           ]}]])))

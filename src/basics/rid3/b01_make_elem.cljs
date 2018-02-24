@@ -1,7 +1,7 @@
 (ns rid3.b01-make-elem
   (:require
    [reagent.core :as reagent]
-   [rid3.core :as rid3]
+   [rid3.core :as rid3 :refer [rid3->]]
    [rid3.basics-util :as util]
    ))
 
@@ -25,10 +25,9 @@
          ;; your svg.  Think of your `svg` as a whiteboard that you are
          ;; going to draw stuff on
          :svg {:did-mount (fn [node ratom]
-                            (-> node
-                                (rid3/attrs
-                                 {:height height
-                                  :width  width})))}
+                            (rid3-> node
+                                    {:height height
+                                     :width  width}))}
 
          ;; Think of pieces as the things you are drawing on your
          ;; whiteboard.
@@ -37,11 +36,10 @@
            :class     "some-element"
            :tag       "rect"
            :did-mount (fn [node ratom]
-                        (-> node
-                            (rid3/attrs
-                             {:x      0
-                              :y      0
-                              :height height
-                              :width  width})))}
+                        (rid3-> node
+                                {:x      0
+                                 :y      0
+                                 :height height
+                                 :width  width}))}
           ]
          }]])))

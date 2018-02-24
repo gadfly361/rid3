@@ -1,7 +1,7 @@
 (ns rid3.scatter-intermediate
   (:require
    [reagent.core :as reagent]
-   [rid3.core :as rid3]
+   [rid3.core :as rid3 :refer [rid3->]]
    [rid3.examples-util :as util]
    [goog.object :as gobj]
    ))
@@ -76,32 +76,30 @@
 
 (defn lighten-axis [node]
   ;; lighten path
-  (-> node
-      (.select "path")
-      (rid3/attrs {:style {:stroke "lightgrey"}}))
+  (rid3-> node
+          (.select "path")
+          {:style {:stroke "lightgrey"}})
 
   ;; light text
-  (-> node
-      (.selectAll ".tick text")
-      (rid3/attrs {:style {:fill "#404040"}}))
+  (rid3-> node
+          (.selectAll ".tick text")
+          {:style {:fill "#404040"}})
 
   ;; light line
-  (-> node
-      (.selectAll ".tick line")
-      (rid3/attrs {:style {:stroke "lightgrey"}})))
+  (rid3-> node
+          (.selectAll ".tick line")
+          {:style {:stroke "lightgrey"}}))
 
 (defn x-axis-did-mount [node ratom]
   (let [x-scale (->x-scale ratom)]
-    (-> node
-        (rid3/attrs
-         {:transform (translate 0 height)})
-        (.call (.axisBottom js/d3 x-scale)))
-    (-> node
-        (.selectAll "text")
-        (rid3/attrs
-         {:dx        "-1.7em"
-          :dy        "-0.1em"
-          :transform "rotate(-60)"}))
+    (rid3-> node
+            {:transform (translate 0 height)}
+            (.call (.axisBottom js/d3 x-scale)))
+    (rid3-> node
+            (.selectAll "text")
+            {:dx        "-1.7em"
+             :dy        "-0.1em"
+             :transform "rotate(-60)"})
     (lighten-axis node)))
 
 
@@ -111,16 +109,16 @@
 
       ;; create axis
       (if did-mount?
-        (-> node
-            (.call (-> (.axisLeft js/d3 y-scale)
-                       (.ticks 4))))
+        (rid3-> node
+                (.call (-> (.axisLeft js/d3 y-scale)
+                           (.ticks 4))))
         ;; Add did-update version that transitions on re-render (i.e.,
         ;; when data changes)
-        (-> node
-            .transition
-            (.duration transition-duration)
-            (.call (-> (.axisLeft js/d3 y-scale)
-                       (.ticks 3)))))
+        (rid3-> node
+                .transition
+                (.duration transition-duration)
+                (.call (-> (.axisLeft js/d3 y-scale)
+                           (.ticks 3)))))
 
       (lighten-axis node))))
 
@@ -133,36 +131,32 @@
   (fn [node ratom]
     (let [y-scale (->y-scale ratom)
           x-scale (->x-scale ratom)]
-      (-> node
-          ;; common
-          (rid3/attrs
-           {:r    4
-            :fill "#3366CC"
-            :cx   (fn [d]
-                    (let [label (gobj/get d "label")]
-                      (x-scale label)))}))
+      ;; common
+      (rid3-> node
+              {:r    4
+               :fill "#3366CC"
+               :cx   (fn [d]
+                       (let [label (gobj/get d "label")]
+                         (x-scale label)))})
 
       (if did-mount?
         ;; did-mount
-        (-> node
-            (rid3/attrs
-             {:cy      (fn [d]
-                         (let [value (gobj/get d "value")]
-                           (y-scale value)))
-              :opacity 0})
-            .transition
-            (.duration transition-duration)
-            (rid3/attrs
-             {:opacity 1}))
+        (rid3-> node
+                {:cy      (fn [d]
+                            (let [value (gobj/get d "value")]
+                              (y-scale value)))
+                 :opacity 0}
+                .transition
+                (.duration transition-duration)
+                {:opacity 1})
 
         ;; did-update
-        (-> node
-            .transition
-            (.duration transition-duration)
-            (rid3/attrs
-             {:cy (fn [d]
-                    (let [value (gobj/get d "value")]
-                      (y-scale value)))})))
+        (rid3-> node
+                .transition
+                (.duration transition-duration)
+                {:cy (fn [d]
+                       (let [value (gobj/get d "value")]
+                         (y-scale value)))}))
       )))
 
 
@@ -186,22 +180,20 @@
          :ratom viz-ratom
          :svg   {:did-mount
                  (fn [node ratom]
-                   (-> node
-                       (rid3/attrs
-                        {:width  (+ width
-                                    (get margin :left)
-                                    (get margin :right))
-                         :height (+ height
-                                    (get margin :top)
-                                    (get margin :bottom))})))}
+                   (rid3-> node
+                           {:width  (+ width
+                                       (get margin :left)
+                                       (get margin :right))
+                            :height (+ height
+                                       (get margin :top)
+                                       (get margin :bottom))}))}
 
          :main-container {:did-mount
                           (fn [node ratom]
-                            (-> node
-                                (rid3/attrs
-                                 {:transform (translate
-                                              (get margin :left)
-                                              (get margin :right))})))}
+                            (rid3-> node
+                                    {:transform (translate
+                                                 (get margin :left)
+                                                 (get margin :right))}))}
          :pieces
          [{:kind      :container
            :class     "x-axis"

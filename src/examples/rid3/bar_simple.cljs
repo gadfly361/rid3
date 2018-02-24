@@ -1,7 +1,7 @@
 (ns rid3.bar-simple
   (:require
    [reagent.core :as reagent]
-   [rid3.core :as rid3]
+   [rid3.core :as rid3 :refer [rid3->]]
    [rid3.examples-util :as util]
    [goog.object :as gobj]
    ))
@@ -85,43 +85,40 @@
        [rid3/viz
         {:id    "bar-simple"
          :ratom viz-ratom
-         :svg {:did-mount
-               (fn [node ratom]
-                 (-> node
-                     (rid3/attrs
-                      {:width  (+ width
-                                  (get margin :left)
-                                  (get margin :right))
-                       :height (+ height
-                                  (get margin :top)
-                                  (get margin :bottom))})))}
+         :svg   {:did-mount
+                 (fn [node ratom]
+                   (rid3-> node
+                           {:width  (+ width
+                                       (get margin :left)
+                                       (get margin :right))
+                            :height (+ height
+                                       (get margin :top)
+                                       (get margin :bottom))}))}
 
          :main-container {:did-mount
                           (fn [node ratom]
-                            (-> node
-                                (rid3/attrs
-                                 {:transform (translate
-                                              (get margin :left)
-                                              (get margin :right))})))}
+                            (rid3-> node
+                                    {:transform (translate
+                                                 (get margin :left)
+                                                 (get margin :right))}))}
          :pieces
          [{:kind  :container
            :class "x-axis"
            :did-mount
            (fn [node ratom]
              (let [x-scale (->x-scale ratom)]
-               (-> node
-                   (rid3/attrs
-                    {:transform (translate 0 height)})
-                   (.call (.axisBottom js/d3 x-scale)))))}
+               (rid3-> node
+                       {:transform (translate 0 height)}
+                       (.call (.axisBottom js/d3 x-scale)))))}
 
           {:kind  :container
            :class "y-axis"
            :did-mount
            (fn [node ratom]
              (let [y-scale (->y-scale ratom)]
-               (-> node
-                   (.call (-> (.axisLeft js/d3 y-scale)
-                              (.ticks 3))))))}
+               (rid3-> node
+                       (.call (-> (.axisLeft js/d3 y-scale)
+                                  (.ticks 3))))))}
 
           {:kind            :elem-with-data
            :class           "bars"
@@ -131,21 +128,18 @@
            (fn [node ratom]
              (let [y-scale (->y-scale ratom)
                    x-scale (->x-scale ratom)]
-               (-> node
-                   (rid3/attrs
-                    {:x      (fn [d]
-                               (let [label (gobj/get d "label")]
-                                 (x-scale label)))
-                     :width  (.bandwidth x-scale)
-                     :fill   (fn [d i]
-                               (color i))
-                     :height (fn [d]
-                               (let [value (gobj/get d "value")]
-                                 (- height
-                                    (y-scale value))))
-                     :y      (fn [d]
-                               (let [value (gobj/get d "value")]
-                                 (y-scale value)))}))))
-           }]
-         }]
-       ])))
+               (rid3-> node
+                       {:x      (fn [d]
+                                  (let [label (gobj/get d "label")]
+                                    (x-scale label)))
+                        :width  (.bandwidth x-scale)
+                        :fill   (fn [d i]
+                                  (color i))
+                        :height (fn [d]
+                                  (let [value (gobj/get d "value")]
+                                    (- height
+                                       (y-scale value))))
+                        :y      (fn [d]
+                                  (let [value (gobj/get d "value")]
+                                    (y-scale value)))})))}]
+         }]])))

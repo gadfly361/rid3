@@ -3,7 +3,7 @@
    [cljs.spec :as spec]
    [reagent.core :as reagent]
    [re-frisk.core :as rf]
-   [rid3.core :as rid3]))
+   [rid3.core :as rid3 :refer [rid3->]]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30,31 +30,28 @@
     {:id             "test1"
      :ratom          app-state
      :svg            {:did-mount (fn [node _]
-                                   (-> node
-                                       (rid3/attrs
-                                        {:height (+ height
-                                                    (:top margin)
-                                                    (:bottom margin))
-                                         :width  (+ width
-                                                    (:left margin)
-                                                    (:right margin))})))}
+                                   (rid3-> node
+                                           {:height (+ height
+                                                       (:top margin)
+                                                       (:bottom margin))
+                                            :width  (+ width
+                                                       (:left margin)
+                                                       (:right margin))}))}
      :main-container {:did-mount (fn [node _]
-                                   (-> node
-                                       (rid3/attrs
-                                        {:transform (str "translate("
-                                                         (:left margin)
-                                                         ","
-                                                         (:top margin)
-                                                         ")")})))}
+                                   (rid3-> node
+                                           {:transform (str "translate("
+                                                            (:left margin)
+                                                            ","
+                                                            (:top margin)
+                                                            ")")}))}
      :pieces         [{:kind      :elem
                        :tag       "rect"
                        :class     "my-elem"
                        :did-mount (fn [node _]
-                                    (-> node
-                                        (rid3/attrs
-                                         {:width  width
-                                          :height height
-                                          :fill   "grey"})))}
+                                    (rid3-> node
+                                            {:width  width
+                                             :height height
+                                             :fill   "grey"}))}
 
                       {:kind            :elem-with-data
                        :tag             "rect"
@@ -66,31 +63,29 @@
                                                             .scaleBand
                                                             (.rangeRound #js [0 width])
                                                             (.domain (clj->js ["A" "B" "C"])))]
-                                            (-> node
-                                                (rid3/attrs
-                                                 {:x      (fn [d]
-                                                            (+ (x-scale d)
-                                                               (/ (.bandwidth x-scale) 4)))
-                                                  :width  (/ (.bandwidth x-scale)
-                                                             2)
-                                                  :y      0
-                                                  :height (fn [d i]
-                                                            (/ height (inc i)))
-                                                  :fill   "green"}))))}
+                                            (rid3-> node
+                                                    {:x      (fn [d]
+                                                               (+ (x-scale d)
+                                                                  (/ (.bandwidth x-scale) 4)))
+                                                     :width  (/ (.bandwidth x-scale)
+                                                                2)
+                                                     :y      0
+                                                     :height (fn [d i]
+                                                               (/ height (inc i)))
+                                                     :fill   "green"})))}
 
                       {:kind      :elem
                        :tag       "text"
                        :class     "my-text"
                        :did-mount (fn [node _]
-                                    (-> node
-                                        (rid3/attrs
-                                         {:x           (/ width 2)
-                                          :y           (/ height 2)
-                                          :font-size   20
-                                          :text-anchor "middle"
-                                          :style       {:font-weight 500
-                                                        :font-family "sans-serif"}})
-                                        (.text "foo")))}
+                                    (rid3-> node
+                                            {:x           (/ width 2)
+                                             :y           (/ height 2)
+                                             :font-size   20
+                                             :text-anchor "middle"
+                                             :style       {:font-weight 500
+                                                           :font-family "sans-serif"}}
+                                            (.text "foo")))}
                       ]
      }]])
 

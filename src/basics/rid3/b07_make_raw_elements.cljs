@@ -1,7 +1,7 @@
 (ns rid3.b07-make-raw-elements
   (:require
    [reagent.core :as reagent]
-   [rid3.core :as rid3]
+   [rid3.core :as rid3 :refer [rid3->]]
    [rid3.basics-util :as util]
    ))
 
@@ -24,10 +24,9 @@
          :ratom viz-ratom
 
          :svg {:did-mount (fn [node ratom]
-                            (-> node
-                                (rid3/attrs
-                                 {:height height
-                                  :width  width})))}
+                            (rid3-> node
+                                    {:height height
+                                     :width  width}))}
 
          ;; Using a :raw piece is like an escape hatch from
          ;; rid3. However, this means that a lot of the conveniences
@@ -43,17 +42,16 @@
            :did-mount (fn [ratom]
                         ;; note: you are no longer passed a node argument
                         (let [node-main-container (js/d3.select "#b07 .rid3-main-container")]
-                          (-> node-main-container
-                              (.append "rect")
-                              (rid3/attrs
-                               {:class        "some-raw-element"
-                                :x            0
-                                :y            0
-                                :height       height
-                                :width        width
-                                :fill         "lightgrey"
-                                :stroke       "grey"
-                                :stroke-width 2}))))
+                          (rid3-> node-main-container
+                                  (.append "rect")
+                                  {:class        "some-raw-element"
+                                   :x            0
+                                   :y            0
+                                   :height       height
+                                   :width        width
+                                   :fill         "lightgrey"
+                                   :stroke       "grey"
+                                   :stroke-width 2})))
 
            ;; Special note: the :did-mount function is *not* default
            ;; to the :did-upate function like the other kinds of
@@ -64,12 +62,11 @@
            :class     "some-raw-element-on-top"
            :did-mount (fn [node ratom]
                         (let [node-main-container (js/d3.select "#b07 .rid3-main-container")]
-                          (-> node-main-container
-                              (.append "circle")
-                              (rid3/attrs
-                               {:class "some-raw-element-on-top"
-                                :cx    (/ width 2)
-                                :cy    (/ height 2)
-                                :r     20
-                                :fill  "green"}))))}]
+                          (rid3-> node-main-container
+                                  (.append "circle")
+                                  {:class "some-raw-element-on-top"
+                                   :cx    (/ width 2)
+                                   :cy    (/ height 2)
+                                   :r     20
+                                   :fill  "green"})))}]
          }]])))

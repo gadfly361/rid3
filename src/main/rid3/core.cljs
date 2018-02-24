@@ -1,9 +1,9 @@
 (ns rid3.core
   (:require
+   ;; note: need to pull in this ns for rid3-> macro
+   [rid3.attrs]
    [rid3.viz :as viz]
-   [rid3.attrs :as attrs]))
+   ))
 
 
 (def viz viz/component)
-
-(def attrs attrs/attrs)

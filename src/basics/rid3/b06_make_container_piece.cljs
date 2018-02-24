@@ -1,7 +1,7 @@
 (ns rid3.b06-make-container-piece
   (:require
    [reagent.core :as reagent]
-   [rid3.core :as rid3]
+   [rid3.core :as rid3 :refer [rid3->]]
    [rid3.basics-util :as util]
    ))
 
@@ -32,11 +32,10 @@
        [rid3/viz
         {:id    "b06"
          :ratom viz-ratom
-         :svg {:did-mount (fn [node ratom]
-                            (-> node
-                                (rid3/attrs
-                                 {:height height
-                                  :width  width})))}
+         :svg   {:did-mount (fn [node ratom]
+                              (rid3-> node
+                                      {:height height
+                                       :width  width}))}
 
          :pieces
          [;; translate a circle and a text together to the top right
@@ -44,55 +43,52 @@
           {:kind      :container
            :class     "top-right-container"
            :did-mount (fn [node ratom]
-                        (-> node
-                            (rid3/attrs
-                             {:transform (translate (- width
-                                                       (* 2 radius))
-                                                    10)})))
+                        (rid3-> node
+                                {:transform (translate (- width
+                                                          (* 2 radius))
+                                                       10)}))
            :children  [{:kind      :elem
                         :tag       "text"
                         :class     "my-text"
                         :did-mount (fn [node ratom]
-                                     (-> node
-                                         (rid3/attrs {:font-size   8
-                                                      :text-anchor "end"})
-                                         (.text "top right circle")))}
+                                     (rid3-> node
+                                             {:font-size   8
+                                              :text-anchor "end"}
+                                             (.text "top right circle")))}
                        {:kind      :elem
                         :tag       "circle"
                         :class     "my-circle"
                         :did-mount (fn [node ratom]
-                                     (-> node
-                                         (rid3/attrs
-                                          {:cy   8
-                                           :r    radius
-                                           :fill "green"})))}]}
+                                     (rid3-> node
+                                             {:cy   8
+                                              :r    radius
+                                              :fill "green"}))}]}
 
           ;; translate a circle and a text together to the bottom
           ;; right of the svg
           {:kind      :container
            :class     "bottom-right-container"
            :did-mount (fn [node ratom]
-                        (-> node
-                            (rid3/attrs
-                             {:transform (translate (- width
-                                                       (* 2 radius))
-                                                    (- height
-                                                       10
-                                                       (* 2 radius)))})))
+                        (rid3-> node
+                                {:transform (translate (- width
+                                                          (* 2 radius))
+                                                       (- height
+                                                          10
+                                                          (* 2 radius)))}))
            :children  [{:kind      :elem
                         :tag       "text"
                         :class     "my-text"
                         :did-mount (fn [node ratom]
-                                     (-> node
-                                         (rid3/attrs {:font-size   8
-                                                      :text-anchor "end"})
-                                         (.text "bottom right circle")))}
+                                     (rid3-> node
+                                             {:font-size   8
+                                              :text-anchor "end"}
+                                             (.text "bottom right circle")))}
                        {:kind      :elem
                         :tag       "circle"
                         :class     "my-circle"
                         :did-mount (fn [node ratom]
-                                     (-> node
-                                         (rid3/attrs {:cy   -12
-                                                      :r    radius
-                                                      :fill "green"})))}]}
+                                     (rid3-> node
+                                             {:cy   -12
+                                              :r    radius
+                                              :fill "green"}))}]}
           ]}]])))
