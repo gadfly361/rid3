@@ -1,5 +1,36 @@
 # Changes
 
+## 0.2.1-alpha (2018-02-24)
+
+Add `rid3->` macro to api. To include it:
+
+```
+(ns foo.bar
+  (:require [rid3.core :as rid3 :refer [rid3->]]))
+```
+
+The purpose of `rid3->` is to be able to use a hiccup-like attribute map when setting attributes on a node.  For example
+
+```
+(fn [node ratom]
+  (-> node
+	(.attr "fill" "grey")
+	(.attr "text-anchor" "middle")
+	(.style "font-weight" 400)
+	(.text "some text")))
+```
+
+ would become
+
+ ```
+ (fn [node ratom]
+  (rid3-> node
+	 {:fill "grey"
+	  :text-anchor "middle"
+	  :style {:font-weight 400}}
+	  (.text "some text")))
+ ```
+
 ## 0.2.0 (2017-09-27)
 
 - add `:key-fn` to `:elem-with-data` piece

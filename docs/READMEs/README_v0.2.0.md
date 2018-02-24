@@ -11,7 +11,7 @@ Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to
 To use rid3, add the following to the `:dependencies` vector in your project.clj file:
 
 ```clojure
-[rid3 "0.2.1-alpha"]
+[rid3 "0.2.0"]
 ```
 
 Using an older version?
@@ -120,7 +120,7 @@ Just so you can get a sense of a `viz`component, let's create a minimal example 
 Add the following to the `:dependencies` vector of your project.clj file.
 
 ```clojure
-[rid3 "0.2.1-alpha"]
+[rid3 "0.2.0"]
 ```
 
 ### Require rid3 in your namespace
@@ -128,40 +128,10 @@ Add the following to the `:dependencies` vector of your project.clj file.
 ```clojure
 (ns foo.core
   (:require
-   [rid3.core :as rid3 :refer [rid3->]]))
+   [rid3.core :as rid3]))
 ```
 
 ### Create an svg
-
-```clojure
-(defn viz [ratom]
-  [rid3/viz
-   {:id    "some-id"
-    :ratom ratom
-    :svg   {:did-mount (fn [node _]
-                         (rid3-> node
-                                 {:width  200
-                                  :height 200
-                                  :style  {:background-color "grey"}}))}
-    }])
-```
-
-Which will result in the following:
-
-```html
-<div id="some-id">
-  <svg width="200" height="200" style="background-color: grey;">
-    <g class="rid3-main-container">
-    </g>
-  </svg>
-</div>
-```
-
-*Note: All viz components need to provide a ratom. All relevant data for the component should be stored here. If anything changes in this ratom, then rid3 will trigger a re-render of the viz component for you.*
-
-You probably noticed that rid3 added a g tag with the class `.rid3-main-container` inside of your svg.  This is where rid3 will place all of your pieces.
-
-You probably also noticed the use of `rid3->`. This is just syntactic sugar to set attributes with familiar hiccup-like attribute maps.  The above is the same as doing the following:
 
 ```clojure
 (defn viz [ratom]
@@ -176,6 +146,21 @@ You probably also noticed the use of `rid3->`. This is just syntactic sugar to s
     }])
 ```
 
+Which will result in the following:
+
+```html
+<div id="some-id">
+  <svg width="200" height="200" style="background-color: grey;">
+    <g class="rid3-main-container">
+    </g>
+  </svg>
+</div>
+```
+
+You probably noticed that rid3 added a g tag with the class `.rid3-main-container` inside of your svg.  This is where rid3 will place all of your pieces.
+
+*Note: All viz components need to provide a ratom. All relevant data for the component should be stored here. If anything changes in this ratom, then rid3 will trigger a re-render of the viz component for you.*
+
 ### Add a circle
 
 ```clojure
@@ -184,20 +169,20 @@ You probably also noticed the use of `rid3->`. This is just syntactic sugar to s
    {:id    "some-id"
     :ratom ratom
     :svg   {:did-mount (fn [node _]
-                         (rid3-> node
-                                 {:width  200
-                                  :height 200
-                                  :style  {:background-color "grey"}}))}
-    ;; ATTENTION \/
+                         (-> node
+                             (.attr "width" 200)
+                             (.attr "height" 200)
+                             (.style "background-color" "grey")))}
+;; ATTENTION \/
     :pieces
     [{:kind      :elem
       :class     "backround"
       :tag       "circle"
       :did-mount (fn [node _]
-                   (rid3-> node
-                           {:cx 100
-                            :cy 100
-                            :r  50}))}]
+                   (-> node
+                       (.attr "cx" 100)
+                       (.attr "cy" 100)
+                       (.attr "r" 50)))}]
     }])
 ```
 
@@ -226,33 +211,34 @@ Please note, that there is **no** `.append` method in our did-mount function! Ri
    {:id    "some-id"
     :ratom ratom
     :svg   {:did-mount (fn [node _]
-                         (rid3-> node
-                                 {:width  200
-                                  :height 200
-                                  :style  {:background-color "grey"}}))}
+                         (-> node
+                             (.attr "width" 200)
+                             (.attr "height" 200)
+                             (.style "border" "solid 1px grey")))}
     :pieces
     [{:kind      :elem
       :class     "backround"
       :tag       "circle"
       :did-mount (fn [node _]
-                   (rid3-> node
-                           {:cx 100
-                            :cy 100
-                            :r  50}))}
-     ;; ATTENTION \/
+                   (-> node
+                       (.attr "cx" 100)
+                       (.attr "cy" 100)
+                       (.attr "r" 50)
+                       (.attr "fill" "grey")))}
+;; ATTENTION \/
      {:kind      :elem
       :class     "foreground"
       :tag       "text"
       :did-mount (fn [node _]
-                   (rid3-> node
-                           {:x                  100
-                            :y                  100
-                            :text-anchor        "middle"
-                            :alignment-baseline "middle"
-                            :fill               "green"
-                            :font-size          "24px"
-                            :font-family        "sans-serif"}
-                           (.text "RID3")))}]
+                   (-> node
+                       (.attr "x" 100)
+                       (.attr "y" 100)
+                       (.attr "text-anchor" "middle")
+                       (.attr "alignment-baseline" "middle")
+                       (.attr "fill" "green")
+                       (.attr "font-size" "24px")
+                       (.attr "font-family" "sans-serif")
+                       (.text "RID3")))}]
     }])
 ```	
 
