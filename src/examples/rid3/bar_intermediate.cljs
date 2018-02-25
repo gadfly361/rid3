@@ -171,7 +171,7 @@
         "Randomize data"]
 
        [rid3/viz
-        {:id    "bar-intermediate"
+        {:id    (name cursor-key)
          :ratom viz-ratom
          :svg   {:did-mount
                  (fn [node ratom]
@@ -194,17 +194,17 @@
            :class     "x-axis"
            :did-mount x-axis-did-mount}
 
-          {:kind  :container
-           :class "y-axis"
-           :did-mount (->y-axis true)
+          {:kind       :container
+           :class      "y-axis"
+           :did-mount  (->y-axis true)
            :did-update (->y-axis false)}
 
           {:kind            :elem-with-data
            :class           "bars"
            :tag             "rect"
            :prepare-dataset prepare-dataset
-           :did-mount (->bars true)
-           :did-update (->bars false)
+           :did-mount       (->bars true)
+           :did-update      (->bars false)
            }]
          }]
        ])))

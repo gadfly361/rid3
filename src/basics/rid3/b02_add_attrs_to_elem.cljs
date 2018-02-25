@@ -22,9 +22,9 @@
          :ratom viz-ratom
 
          :svg {:did-mount (fn [node ratom]
-                            (-> node
-                                {:height height
-                                 :width  width}))}
+                            (rid3-> node
+                                    {:height height
+                                     :width  width}))}
 
          :pieces
          [{:kind      :elem

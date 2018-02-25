@@ -3,11 +3,13 @@
    [cljs.spec :as spec]
    [reagent.core :as reagent]
    [re-frisk.core :as rf]
-   [rid3.pie-simple :as pie-simple]
+   [rid3.general-update-pattern-simple :as general-update-pattern-simple]
+   [rid3.general-update-pattern-intermediate :as general-update-pattern-intermediate]
    [rid3.bar-simple :as bar-simple]
    [rid3.bar-intermediate :as bar-intermediate]
    [rid3.scatter-simple :as scatter-simple]
    [rid3.scatter-intermediate :as scatter-intermediate]
+   [rid3.pie-simple :as pie-simple]
    ))
 
 
@@ -32,14 +34,27 @@
    [:section
     [:h3 "Bar Chart"]
     [:div.flex-container.flex-wrap
-     [bar-simple/example app-state]
+     [:div
+      {:style {:margin-right "16px"}}
+      [bar-simple/example app-state]]
      [bar-intermediate/example app-state]]
+    ]
+
+   [:section
+    [:h3 "General Update Pattern"]
+    [:div.flex-container.flex-wrap
+     [:div
+      {:style {:margin-right "16px"}}
+      [general-update-pattern-simple/example app-state]]
+     [general-update-pattern-intermediate/example app-state]]
     ]
 
    [:section
     [:h3 "Scatter plot"]
     [:div.flex-container.flex-wrap
-     [scatter-simple/example app-state]
+     [:div
+      {:style {:margin-right "16px"}}
+      [scatter-simple/example app-state]]
      [scatter-intermediate/example app-state]]
     ]
 

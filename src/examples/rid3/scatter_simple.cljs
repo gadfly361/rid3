@@ -85,7 +85,7 @@
         "Randomize data"]
 
        [rid3/viz
-        {:id    "scatter-simple"
+        {:id    (name cursor-key)
          :ratom viz-ratom
          :svg   {:did-mount
                  (fn [node ratom]

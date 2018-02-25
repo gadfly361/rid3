@@ -16,7 +16,7 @@ To use rid3, add the following to the `:dependencies` vector in your project.clj
 
 Using an older version?
 
-- [Migrating from v0.1.0-alpha-3?](https://github.com/gadfly361/rid3/blob/master/CHANGES.md)
+- [Changes](https://github.com/gadfly361/rid3/blob/master/CHANGES.md)
 - [Previous docs](https://github.com/gadfly361/rid3/tree/master/docs/READMEs)
 
 ## The Problem
@@ -89,12 +89,15 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 |------------------|-----------------------|-------------------------------------------------|-----------|
 | :class           | string                |                                                 | yes       |
 | :tag             | string                |                                                 | yes       |
-| :did-mount       | (fn [node ratom] ...) |                                                 | yes       |
+| :did-mount       | (fn [node ratom] ...) |                                                 | yes (1)   |
 | :did-update      | (fn [node ratom] ...) | did-mount                                       | no        |
+| :did-mount-gup   | gup-hash-map          |                                                 | yes (1)   |
+| :did-update-gup  | gup-hash-map         | did-update-gup                                   | no        |
 | :prepare-dataset | (fn [ratom] ...)      | (fn [ratom] (-> @ratom (get :dataset) clj->js)) | no        |
 | :key-fn          | (fn [d i] ...)        |                                                 | no        |
 
- - Note that `:elem-with-data` expects what is returned by the
+
+ - `:elem-with-data` pieces expect what is returned by the
    `:prepare-dataset` function to be a JavaScript array. E.g. `[1, 2, 3]` or
    `[{"color": "blue"}, {"color": "green"} ... ]`
    
@@ -103,6 +106,18 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
  - Individual datums (often referred to as "d") of the JavaScript array are passed to the anonymous functions that
    can be used to set properties of each `:elem-with-data` element. E.g. `(.attr node "color"
    (fn [d] (goog.object/get d "color")))`
+   
+- (1) You can use either `:did-mount` and `:did-update` **or** `:did-mount-gup` and `:did-update-gup`. You *cannot* use one of each.
+
+- If you choose to use the *gup* variants, then you can explicitly set attributes and add transitions in the enter and exit parts of the [general update pattern](https://bl.ocks.org/mbostock/3808234).
+
+- A `gup-hash-map` looks like:
+
+```clojure
+{:enter  (fn [node ratom] ...)
+ :update (fn [node ratom] ...)
+ :exit   (fn [node ratom] ...)}
+```
 
 **`:raw`** for when you want to either trigger some side-effect or have an escape hatch from the rid3
 
@@ -138,7 +153,7 @@ Add the following to the `:dependencies` vector of your project.clj file.
   [rid3/viz
    {:id    "some-id"
     :ratom ratom
-    :svg   {:did-mount (fn [node _]
+    :svg   {:did-mount (fn [node ratom]
                          (rid3-> node
                                  {:width  200
                                   :height 200
@@ -168,7 +183,7 @@ You probably also noticed the use of `rid3->`. This is just syntactic sugar to s
   [rid3/viz
    {:id    "some-id"
     :ratom ratom
-    :svg   {:did-mount (fn [node _]
+    :svg   {:did-mount (fn [node ratom]
                          (-> node
                              (.attr "width" 200)
                              (.attr "height" 200)
@@ -183,7 +198,7 @@ You probably also noticed the use of `rid3->`. This is just syntactic sugar to s
   [rid3/viz
    {:id    "some-id"
     :ratom ratom
-    :svg   {:did-mount (fn [node _]
+    :svg   {:did-mount (fn [node ratom]
                          (rid3-> node
                                  {:width  200
                                   :height 200
@@ -193,7 +208,7 @@ You probably also noticed the use of `rid3->`. This is just syntactic sugar to s
     [{:kind      :elem
       :class     "backround"
       :tag       "circle"
-      :did-mount (fn [node _]
+      :did-mount (fn [node ratom]
                    (rid3-> node
                            {:cx 100
                             :cy 100
@@ -225,7 +240,7 @@ Please note, that there is **no** `.append` method in our did-mount function! Ri
   [rid3/viz
    {:id    "some-id"
     :ratom ratom
-    :svg   {:did-mount (fn [node _]
+    :svg   {:did-mount (fn [node ratom]
                          (rid3-> node
                                  {:width  200
                                   :height 200
@@ -234,7 +249,7 @@ Please note, that there is **no** `.append` method in our did-mount function! Ri
     [{:kind      :elem
       :class     "backround"
       :tag       "circle"
-      :did-mount (fn [node _]
+      :did-mount (fn [node ratom]
                    (rid3-> node
                            {:cx 100
                             :cy 100
@@ -243,7 +258,7 @@ Please note, that there is **no** `.append` method in our did-mount function! Ri
      {:kind      :elem
       :class     "foreground"
       :tag       "text"
-      :did-mount (fn [node _]
+      :did-mount (fn [node ratom]
                    (rid3-> node
                            {:x                  100
                             :y                  100

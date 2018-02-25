@@ -9,8 +9,8 @@
 (def cursor-key :pie-simple)
 
 (def height 152)
-(def width 280)
-(def radius 70)
+(def width 260)
+(def radius 60)
 
 (def color
   (-> js/d3
@@ -108,7 +108,7 @@
         "Randomize data"]
 
        [rid3/viz
-        {:id    "e01-pie-simple"
+        {:id    (name cursor-key)
          :ratom viz-ratom
          :svg   {:did-mount
                  (fn [node ratom]
