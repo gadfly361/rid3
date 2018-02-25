@@ -1,4 +1,10 @@
 (defproject rid3 "0.2.1-alpha"
+  :description "Reagent Interface to D3"
+  :url "https://github.com/gadfly361/rid3"
+  :license {:name "MIT"}
+  :scm {:name "git"
+        :url  "https://github.com/gadfly361/rid3"}
+
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
                  [reagent "0.6.1"]
