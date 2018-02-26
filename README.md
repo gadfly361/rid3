@@ -92,7 +92,7 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 | :did-mount       | (fn [node ratom] ...) |                                                 | yes (1)   |
 | :did-update      | (fn [node ratom] ...) | did-mount                                       | no        |
 | :did-mount-gup   | gup-hash-map          |                                                 | yes (1)   |
-| :did-update-gup  | gup-hash-map         | did-update-gup                                   | no        |
+| :did-update-gup  | gup-hash-map          | did-mount-gup                                   | no        |
 | :prepare-dataset | (fn [ratom] ...)      | (fn [ratom] (-> @ratom (get :dataset) clj->js)) | no        |
 | :key-fn          | (fn [d i] ...)        |                                                 | no        |
 
