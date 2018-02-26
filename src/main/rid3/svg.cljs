@@ -7,7 +7,7 @@
                 ratom
                 svg]} opts
         parent-node   (js/d3.select (str "#" id))
-        did-mount     (get svg :did-mount (fn [node] node))]
+        did-mount     (get svg :did-mount (fn [node ratom] node))]
     (-> parent-node
         (.append "svg")
         (did-mount ratom))))
@@ -19,6 +19,6 @@
                 svg]} opts
         did-update    (or (get svg :did-update)
                           (get svg :did-mount) ;; sane fallback
-                          (fn [node] node))
+                          (fn [node ratom] node))
         node          (js/d3.select (str "#" id " svg"))]
     (did-update node ratom)))

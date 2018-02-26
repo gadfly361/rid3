@@ -24,7 +24,7 @@
                     3000)
     (fn [app-state]
       [:div
-       [:h4 "Intermediate GUP (w/ different did-mount and did-update transitions)"]
+       [:h4 "Intermediate GUP (w/ transitions on enter-init, enter and exit)"]
        [util/link-source (name cursor-key)]
 
        [rid3/viz
@@ -46,57 +46,52 @@
                                   (get :dataset)
                                   clj->js))
            :key-fn          (fn [d] d)
-           :did-mount-gup
-           {:enter  (fn [node ratom]
-                      (rid3-> node
-                              {:fill        "blue"
-                               :dy          ".35em"
-                               :x           0
-                               :y           0
-                               :text-anchor "middle"
-                               :font-size   10
-                               :style       {:fill-opacity 1e-6}}
-                              (.text (fn [d] d))
-                              .transition
-                              (.duration 800)
-                              {:x     (fn [d i]
-                                        (* i 9))
-                               :style {:fill-opacity 1}}))
-            :update (fn [node ratom]
-                      (rid3-> node
-                              {:fill  "grey"
-                               :y     0
-                               :style {:fill-opacity 1}}
-                              .transition
-                              (.duration 800)
-                              {:x (fn [d i]
-                                    (* i 9))}))
-            :exit   (fn [node ratom]
-                      (rid3-> node
-                              {:fill "brown"}
-                              .transition
-                              (.duration 800)
-                              {:y     20
-                               :style {:fill-opacity 1e-6}}))}
-           :did-update-gup  {:enter
-                             (fn [node ratom]
-                               (rid3-> node
-                                       {:fill        "green"
-                                        :dy          ".35em"
-                                        :x           (fn [d i]
-                                                       (* i 9))
-                                        :y           -20
-                                        :text-anchor "middle"
-                                        :font-size   10
-                                        :style       {:fill-opacity 1e-6}}
-                                       (.text (fn [d] d))
-                                       .transition
-                                       (.duration 800)
-                                       {:y     0
-                                        :style {:fill-opacity 1}}))
-
-                             ;; NOTE: :update and :exit will default
-                             ;; to what is in the did-update-gup map
-                             }
-           }
+           :gup
+           {:enter-init (fn [node ratom]
+                          (rid3-> node
+                                  {:fill        "blue"
+                                   :dy          ".35em"
+                                   :x           0
+                                   :y           0
+                                   :text-anchor "middle"
+                                   :font-size   10
+                                   :style       {:fill-opacity 1e-6}}
+                                  (.text (fn [d] d))
+                                  .transition
+                                  (.duration 800)
+                                  {:x     (fn [d i]
+                                            (* i 9))
+                                   :style {:fill-opacity 1}}))
+            :enter
+            (fn [node ratom]
+              (rid3-> node
+                      {:fill        "green"
+                       :dy          ".35em"
+                       :x           (fn [d i]
+                                      (* i 9))
+                       :y           -20
+                       :text-anchor "middle"
+                       :font-size   10
+                       :style       {:fill-opacity 1e-6}}
+                      (.text (fn [d] d))
+                      .transition
+                      (.duration 800)
+                      {:y     0
+                       :style {:fill-opacity 1}}))
+            :update     (fn [node ratom]
+                          (rid3-> node
+                                  {:fill  "grey"
+                                   :y     0
+                                   :style {:fill-opacity 1}}
+                                  .transition
+                                  (.duration 800)
+                                  {:x (fn [d i]
+                                        (* i 9))}))
+            :exit       (fn [node ratom]
+                          (rid3-> node
+                                  {:fill "brown"}
+                                  .transition
+                                  (.duration 800)
+                                  {:y     20
+                                   :style {:fill-opacity 1e-6}}))}}
           ]}]])))

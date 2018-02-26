@@ -1,10 +1,10 @@
 # Changes
 
-## 0.2.1-alpha (2018-02-25)
+## 0.2.1-alpha2 (2018-02-26)
 
-- Add support for `:did-mount-gup` and `:did-update-gup` to the `:elem-with-data` piece.
+- Add support for `:gup` to the `:elem-with-data` piece, which *can* be used **instead of** using `:did-mount` and `:did-update`.
 
-These *gup* variants, allow you to explicitly set attributes and add transitions in the enter, update, and exit parts of the [general update pattern](https://bl.ocks.org/mbostock/3808234).
+*gup*, allow you to explicitly set attributes and add transitions in the `:enter-init`, `:enter`, `:update`, and `:exit` parts of the [general update pattern](https://bl.ocks.org/mbostock/3808234).
 
 As an aside, the traditional `:did-mount` and `:did-update` only give you access to the update part of the general update pattern (with a sane way of handling enter and exit for you).
 
@@ -36,6 +36,10 @@ The purpose of `rid3->` is to be able to use a hiccup-like attribute map when se
 	(.style "font-weight" 400)
 	(.text "some text")))
  ```
+
+## 0.2.1-alpha (2018-02-25)
+
+Don't use this version ... it had introduced an api that was decided against.
 
 ## 0.2.0 (2017-09-27)
 

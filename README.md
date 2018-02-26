@@ -11,7 +11,7 @@ Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to
 To use rid3, add the following to the `:dependencies` vector in your project.clj file:
 
 ```clojure
-[rid3 "0.2.1-alpha"]
+[rid3 "0.2.1-alpha2"]
 ```
 
 Using an older version?
@@ -91,8 +91,7 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
 | :tag             | string                |                                                 | yes       |
 | :did-mount       | (fn [node ratom] ...) |                                                 | yes (1)   |
 | :did-update      | (fn [node ratom] ...) | did-mount                                       | no        |
-| :did-mount-gup   | gup-hash-map          |                                                 | yes (1)   |
-| :did-update-gup  | gup-hash-map          | did-mount-gup                                   | no        |
+| :gup             | gup-hash-map          |                                                 | yes (1)   |
 | :prepare-dataset | (fn [ratom] ...)      | (fn [ratom] (-> @ratom (get :dataset) clj->js)) | no        |
 | :key-fn          | (fn [d i] ...)        |                                                 | no        |
 
@@ -107,17 +106,20 @@ And where :pieces is a vector of piece hash-maps.  There are four kinds of piece
    can be used to set properties of each `:elem-with-data` element. E.g. `(.attr node "color"
    (fn [d] (goog.object/get d "color")))`
    
-- (1) You can use either `:did-mount` and `:did-update` **or** `:did-mount-gup` and `:did-update-gup`. You *cannot* use one of each.
+- (1) You can use either `:did-mount` and `:did-update` **or** `:gup`. You *cannot* mix.
 
-- If you choose to use the *gup* variants, then you can explicitly set attributes and add transitions in the enter and exit parts of the [general update pattern](https://bl.ocks.org/mbostock/3808234).
+- If you choose to use `:gup`, then you can explicitly set attributes and add transitions in the `:enter-init`, `:enter`, `:update`, and `:exit` parts of the [general update pattern](https://bl.ocks.org/mbostock/3808234).
 
 - A `gup-hash-map` looks like:
 
 ```clojure
-{:enter  (fn [node ratom] ...)
- :update (fn [node ratom] ...)
- :exit   (fn [node ratom] ...)}
+{:enter-init  (fn [node ratom] ...)
+ :enter       (fn [node ratom] ...)
+ :update      (fn [node ratom] ...)
+ :exit        (fn [node ratom] ...)}
 ```
+
+- Note: only use `:enter-init` if you want a *special* enter transition when the vizusualiztion first mounts, otherwise, you can ignore it, and just use `:enter`, `:update` and `:exit`.
 
 **`:raw`** for when you want to either trigger some side-effect or have an escape hatch from the rid3
 
@@ -135,7 +137,7 @@ Just so you can get a sense of a `viz`component, let's create a minimal example 
 Add the following to the `:dependencies` vector of your project.clj file.
 
 ```clojure
-[rid3 "0.2.1-alpha"]
+[rid3 "0.2.1-alpha2"]
 ```
 
 ### Require rid3 in your namespace

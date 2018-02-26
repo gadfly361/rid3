@@ -59,82 +59,50 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; GUP did-mount
+;; GUP
 
-(defn- did-mount-gup-data-enter [piece opts prev-classes]
-  (let [{:keys [ratom]}         opts
+(defn- gup-data-enter-init [piece opts prev-classes]
+  (let [{:keys [ratom]}      opts
         {:keys [tag
-                did-mount-gup]} piece
-        {:keys [enter]}         did-mount-gup
-        on-enter                (or enter
-                                    (fn [node ratom] node))]
+                gup]}        piece
+        {:keys [enter
+                enter-init]} gup
+        on-enter             (or enter-init
+                                 enter ;; sane alternative
+                                 (fn [node ratom] node))]
     (-> (data-join piece opts prev-classes)
         .enter
         (.append tag)
         (on-enter ratom))))
 
-(defn- did-mount-gup-data-update [piece opts prev-classes]
-  (let [{:keys [ratom]}            opts
-        {:keys [did-mount-gup]}    piece
-        {did-mount-update :update} did-mount-gup
-        on-update                  (or did-mount-update
-                                       (fn [node ratom] node))
-        ref                        (data-join piece opts prev-classes)]
-    (on-update ref ratom)))
-
-(defn- did-mount-gup-data-exit [piece opts prev-classes]
-  (let [{:keys [ratom]}         opts
-        {:keys [did-mount-gup]} piece
-        {:keys [exit]}          did-mount-gup
-        on-exit                 (or exit
-                                    (fn [node ratom]
-                                      node))]
-    (-> (data-join piece opts prev-classes)
-        .exit
-        (on-exit ratom)
-        .remove)))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; GUP did-update
-
-(defn- did-update-gup-data-enter [piece opts prev-classes]
-  (let [{:keys [ratom]}           opts
+(defn- gup-data-enter [piece opts prev-classes]
+  (let [{:keys [ratom]}     opts
         {:keys [tag
                 did-update-gup
-                did-mount-gup]}   piece
-        {did-update-enter :enter} did-update-gup
-        {did-mount-enter :enter}  did-mount-gup
-        on-enter                  (or did-update-enter
-                                      did-mount-enter ;; sane fallback
-                                      (fn [node ratom] node))]
+                gup]}       piece
+        {enter :enter} gup
+        on-enter            (or enter
+                                (fn [node ratom] node))]
     (-> (data-join piece opts prev-classes)
         .enter
         (.append tag)
         (on-enter ratom))))
 
-(defn- did-update-gup-data-update [piece opts prev-classes]
-  (let [{:keys [ratom]}             opts
-        {:keys [did-update-gup
-                did-mount-gup]}    piece
-        {did-update-update :update} did-update-gup
-        {did-mount-update :update}  did-mount-gup
-        on-update                   (or did-update-update
-                                        did-mount-update
-                                        (fn [node ratom] node))
-        ref                         (data-join piece opts prev-classes)]
+(defn- gup-data-update [piece opts prev-classes]
+  (let [{:keys [ratom]}      opts
+        {:keys [gup]}        piece
+        {gup-update :update} gup
+        on-update            (or gup-update
+                                 (fn [node ratom] node))
+        ref                  (data-join piece opts prev-classes)]
     (on-update ref ratom)))
 
-(defn- did-update-gup-data-exit [piece opts prev-classes]
-  (let [{:keys [ratom]}         opts
-        {:keys [did-update-gup
-                did-mount-gup]} piece
-        {did-update-exit :exit} did-update-gup
-        {did-mount-exit :exit}  did-mount-gup
-        on-exit                 (or did-update-exit
-                                    did-mount-exit ;; sane fallback
-                                    (fn [node ratom] node))]
+(defn- gup-data-exit [piece opts prev-classes]
+  (let [{:keys [ratom]} opts
+        {:keys [gup]}   piece
+        {:keys [exit]}  gup
+        on-exit         (or exit
+                            (fn [node ratom] node))]
     (-> (data-join piece opts prev-classes)
         .exit
         (on-exit ratom)

@@ -53,7 +53,7 @@
            ;; define the enter, update, and exit parts of the general
            ;; update pattern.
 
-           :did-mount-gup
+           :gup
            {:enter  (fn [node ratom]
                       (rid3-> node
                               {:fill        "green"

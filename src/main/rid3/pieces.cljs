@@ -43,16 +43,18 @@
         selector (util/node-selector id prev-classes)
         node     (js/d3.select selector)
         class    (get piece :class)
-        gup?     (get piece :did-mount-gup)]
+        gup?     (get piece :gup)]
     (-> node
         (.append "g")
         (.attr "class" class))
     (if gup?
       (do
-        (data/did-mount-gup-data-exit piece opts prev-classes)
-        (data/did-mount-gup-data-update piece opts prev-classes)
-        (data/did-mount-gup-data-enter piece opts prev-classes))
+        ;; enter needs to be after update
+        (data/gup-data-exit piece opts prev-classes)
+        (data/gup-data-update piece opts prev-classes)
+        (data/gup-data-enter-init piece opts prev-classes))
       (do
+        ;; update needs to be after enter
         (data/data-enter piece opts prev-classes)
         (data/did-mount-data-update piece opts prev-classes)
         (data/data-exit piece opts prev-classes)))))
@@ -161,14 +163,15 @@
 
 
 (defn- elem-with-data-did-update [piece opts prev-classes]
-  (let [gup? (or (get piece :did-update-gup)
-                 (get piece :did-mount-gup))]
+  (let [gup? (get piece :gup)]
     (if gup?
       (do
-        (data/did-update-gup-data-exit piece opts prev-classes)
-        (data/did-update-gup-data-update piece opts prev-classes)
-        (data/did-update-gup-data-enter piece opts prev-classes))
+        ;; enter needs to be after update
+        (data/gup-data-exit piece opts prev-classes)
+        (data/gup-data-update piece opts prev-classes)
+        (data/gup-data-enter piece opts prev-classes))
       (do
+        ;; update needs to be after enter
         (data/data-enter piece opts prev-classes)
         (data/did-update-data-update piece opts prev-classes)
         (data/data-exit piece opts prev-classes)))))
