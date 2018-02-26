@@ -48,10 +48,10 @@
            :key-fn          (fn [d] d)
 
            ;; Instead of using `:did-mount`, for `:elem-with-data`
-           ;; pieces, you can instead use `:did-mount-gup`. This will
-           ;; give you more control and will allow you to explicitly
-           ;; define the enter, update, and exit parts of the general
-           ;; update pattern.
+           ;; pieces, you can instead use `:gup`. This will give you
+           ;; more control and will allow you to explicitly define the
+           ;; enter, update, and exit parts of the general update
+           ;; pattern.
 
            :gup
            {:enter  (fn [node ratom]

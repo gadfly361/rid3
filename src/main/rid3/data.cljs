@@ -78,7 +78,6 @@
 (defn- gup-data-enter [piece opts prev-classes]
   (let [{:keys [ratom]}     opts
         {:keys [tag
-                did-update-gup
                 gup]}       piece
         {enter :enter} gup
         on-enter            (or enter
