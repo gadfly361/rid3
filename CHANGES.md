@@ -1,5 +1,9 @@
 # Changes
 
+## 0.2.1 (2018-03-05)
+
+- Same as 0.2.1-alpha2
+
 ## 0.2.1-alpha2 (2018-02-26)
 
 - Add support for `:gup` to the `:elem-with-data` piece, which *can* be used **instead of** using `:did-mount` and `:did-update`.

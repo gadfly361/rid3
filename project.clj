@@ -1,4 +1,4 @@
-(defproject rid3 "0.2.1-alpha2"
+(defproject rid3 "0.2.1"
   :description "Reagent Interface to D3"
   :url "https://github.com/gadfly361/rid3"
   :license {:name "MIT"}
