@@ -1,6 +1,6 @@
 # rid3
 
-Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to [**d3**](https://d3js.org/).
+Rid3: [**R**eagent](https://github.com/reagent-project/reagent) **i**nterface to [**d3**](https://d3js.org/). Pronounced like the word 'ride'.
 
 [basics](http://rawgit.com/gadfly361/rid3/master/dev-resources/public/basics.html)
 
