@@ -3,7 +3,7 @@
    [rid3.util :as util]))
 
 
-(defn- data-join [piece opts prev-classes]
+(defn data-join [piece opts prev-classes]
   (let [{:keys [id
                 ratom]}  opts
         {:keys [tag
@@ -25,14 +25,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Normal
 
-(defn- data-enter [piece opts prev-classes]
+(defn data-enter [piece opts prev-classes]
   (let [{:keys [ratom]} opts
         {:keys [tag]}   piece]
     (-> (data-join piece opts prev-classes)
         .enter
         (.append tag))))
 
-(defn- did-mount-data-update [piece opts prev-classes]
+(defn did-mount-data-update [piece opts prev-classes]
   (let [{:keys [ratom]}     opts
         {:keys [did-mount]} piece
         on-update           (or did-mount
@@ -40,7 +40,7 @@
         ref                 (data-join piece opts prev-classes)]
     (on-update ref ratom)))
 
-(defn- did-update-data-update [piece opts prev-classes]
+(defn did-update-data-update [piece opts prev-classes]
   (let [{:keys [ratom]}      opts
         {:keys [did-mount
                 did-update]} piece
@@ -50,7 +50,7 @@
         ref                  (data-join piece opts prev-classes)]
     (on-update ref ratom)))
 
-(defn- data-exit [piece opts prev-classes]
+(defn data-exit [piece opts prev-classes]
   (let [{:keys [ratom]} opts]
     (-> (data-join piece opts prev-classes)
         .exit
@@ -61,7 +61,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; GUP
 
-(defn- gup-data-enter-init [piece opts prev-classes]
+(defn gup-data-enter-init [piece opts prev-classes]
   (let [{:keys [ratom]}      opts
         {:keys [tag
                 gup]}        piece
@@ -75,19 +75,19 @@
         (.append tag)
         (on-enter ratom))))
 
-(defn- gup-data-enter [piece opts prev-classes]
-  (let [{:keys [ratom]}     opts
+(defn gup-data-enter [piece opts prev-classes]
+  (let [{:keys [ratom]} opts
         {:keys [tag
-                gup]}       piece
-        {enter :enter} gup
-        on-enter            (or enter
-                                (fn [node ratom] node))]
+                gup]}   piece
+        {enter :enter}  gup
+        on-enter        (or enter
+                            (fn [node ratom] node))]
     (-> (data-join piece opts prev-classes)
         .enter
         (.append tag)
         (on-enter ratom))))
 
-(defn- gup-data-update [piece opts prev-classes]
+(defn gup-data-update [piece opts prev-classes]
   (let [{:keys [ratom]}      opts
         {:keys [gup]}        piece
         {gup-update :update} gup
@@ -96,7 +96,7 @@
         ref                  (data-join piece opts prev-classes)]
     (on-update ref ratom)))
 
-(defn- gup-data-exit [piece opts prev-classes]
+(defn gup-data-exit [piece opts prev-classes]
   (let [{:keys [ratom]} opts
         {:keys [gup]}   piece
         {:keys [exit]}  gup

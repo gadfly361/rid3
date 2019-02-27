@@ -2,7 +2,7 @@
   (:require [cljsjs.d3]))
 
 
-(defn- svg-did-mount [opts]
+(defn svg-did-mount [opts]
   (let [{:keys [id
                 ratom
                 svg]} opts
@@ -13,7 +13,7 @@
         (did-mount ratom))))
 
 
-(defn- svg-did-update [opts]
+(defn svg-did-update [opts]
   (let [{:keys [id
                 ratom
                 svg]} opts

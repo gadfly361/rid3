@@ -6,7 +6,7 @@
 (def main-container-class "rid3-main-container")
 
 
-(defn- node-selector [id prev-classes]
+(defn node-selector [id prev-classes]
   (let [prev-classes (remove nil? prev-classes)]
     (str "#" id " svg"
          " ." main-container-class

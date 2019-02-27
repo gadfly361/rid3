@@ -4,7 +4,7 @@
    [rid3.util :as util]))
 
 
-(defn- main-container-did-mount [opts]
+(defn main-container-did-mount [opts]
   (let [{:keys [id
                 ratom
                 pieces
@@ -19,7 +19,7 @@
         (did-mount ratom))))
 
 
-(defn- main-container-did-update [opts]
+(defn main-container-did-update [opts]
   (let [{:keys [id
                 ratom
                 pieces

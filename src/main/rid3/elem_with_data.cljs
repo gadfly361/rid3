@@ -5,7 +5,7 @@
    [rid3.data :as data]))
 
 
-(defn- piece-did-mount [piece opts prev-classes]
+(defn piece-did-mount [piece opts prev-classes]
   (let [id       (get opts :id)
         selector (util/node-selector id prev-classes)
         node     (js/d3.select selector)
@@ -27,7 +27,7 @@
         (data/data-exit piece opts prev-classes)))))
 
 
-(defn- piece-did-update [piece opts prev-classes]
+(defn piece-did-update [piece opts prev-classes]
   (let [gup? (get piece :gup)]
     (if gup?
       (do

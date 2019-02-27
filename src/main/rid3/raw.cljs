@@ -4,7 +4,7 @@
    [rid3.util :as util]))
 
 
-(defn- piece-did-mount [piece opts]
+(defn piece-did-mount [piece opts]
   (let [{:keys [ratom]}             opts
         {:keys [did-mount]
          :or   {did-mount (fn [node ratom]
@@ -12,7 +12,7 @@
     (did-mount ratom)))
 
 
-(defn- piece-did-update [piece opts]
+(defn piece-did-update [piece opts]
   (let [{:keys [ratom]}              opts
         {:keys [did-update]
          :or   {did-update (fn [node ratom]

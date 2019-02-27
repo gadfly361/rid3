@@ -4,7 +4,7 @@
    [rid3.util :as util]))
 
 
-(defn- piece-did-mount [piece opts prev-classes]
+(defn piece-did-mount [piece opts prev-classes]
   (let [{:keys [id
                 ratom]}             opts
         {:keys [tag
@@ -20,7 +20,7 @@
         (did-mount ratom))))
 
 
-(defn- piece-did-update [piece opts prev-classes]
+(defn piece-did-update [piece opts prev-classes]
   (let [{:keys [id
                 ratom]}      opts
         {:keys [tag

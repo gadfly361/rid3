@@ -42,7 +42,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Handlers
 
-(defn- handle-piece-did-mount
+(defn handle-piece-did-mount
   ([piece opts]
    (handle-piece-did-mount piece opts []))
 
@@ -94,7 +94,7 @@
          :else nil)))))
 
 
-(defn- handle-piece-did-update
+(defn handle-piece-did-update
   ([piece opts]
    (handle-piece-did-update piece opts []))
 

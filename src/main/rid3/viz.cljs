@@ -6,14 +6,14 @@
    [rid3.svg :as svg]))
 
 
-(defn- component-render [opts]
+(defn component-render [opts]
   (let [{:keys [id
                 ratom]} opts
         _trigger-update @ratom]
     [:div {:id id}]))
 
 
-(defn- component-did-mount [opts]
+(defn component-did-mount [opts]
 
   ;; TODO: remove notice in v0.3.0
   (when (get opts :prepare-dataset)
@@ -27,7 +27,7 @@
       (pieces/handle-piece-did-mount piece opts))))
 
 
-(defn- component-did-update [opts]
+(defn component-did-update [opts]
   (svg/svg-did-update opts)
   (main-container/main-container-did-update opts)
 
@@ -36,7 +36,7 @@
       (pieces/handle-piece-did-update piece opts))))
 
 
-(defn- component [opts]
+(defn component [opts]
   (reagent/create-class
    {:reagent-render       #(component-render opts)
     :component-did-mount  #(component-did-mount opts)

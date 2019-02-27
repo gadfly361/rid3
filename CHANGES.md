@@ -1,5 +1,9 @@
 # Changes
 
+## 0.2.1-1 (2018-03-05)
+
+- Same as 0.2.1, but made functions public
+
 ## 0.2.1 (2018-03-05)
 
 - Same as 0.2.1-alpha2
