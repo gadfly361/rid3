@@ -30,15 +30,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dataset
 
+
 (defn ->mock-dataset []
-  (drop 1
-        (reductions (fn [m d]
-                      (hash-map
-                       :label d
-                       :value (+ (get m :value)
-                                 (rand-int 5))))
-                    {}
-                    ["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"])))
+  (let [counter-atom (atom 0)]
+    (drop 1
+          (reductions (fn [m d]
+                        (hash-map
+                         :label d
+                         :value (+ (get m :value)
+                                   (rand-int 5))))
+                      {}
+                      #_["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"]
+                      (mapv (fn [x]
+                              (let [count (str @counter-atom)]
+                                (swap! counter-atom inc)
+                                count))
+                            (range 50))))))
 
 (defn prepare-dataset [ratom]
   (-> @ratom
@@ -108,10 +115,23 @@
            :class "x-axis"
            :did-mount
            (fn [node ratom]
-             (let [x-scale (->x-scale ratom)]
+             (let [x-scale (->x-scale ratom)
+                   domain-js (.domain x-scale)
+                   domain-clj (js->clj domain-js)
+                   domain-count (count domain-clj)
+                   index-of-10-percent (js/Math.floor (* 0.10
+                                                         domain-count))
+                   domain-subset-js (->> domain-clj
+                                         (map-indexed vector)
+                                         (filter (fn [[i d]]
+                                                   (= (mod i index-of-10-percent)
+                                                      0)))
+                                         (mapv second)
+                                         clj->js)]
                (rid3-> node
                        {:transform (translate 0 height)}
-                       (.call (-> (.axisBottom js/d3 x-scale)))
+                       (.call (-> (.axisBottom js/d3 x-scale)
+                                  (.tickValues domain-subset-js)))
                        (.selectAll "text")
                        {:dx        "-1.7em"
                         :dy        "-0.1em"
@@ -121,7 +141,7 @@
            :class "y-axis"
            :did-mount
            (fn [node ratom]
-             (let [y-scale (->y-scale ratom)]
+             (let [y-scale (->y-scale ratom)]               
                (rid3-> node
                        (.call (-> (.axisLeft js/d3 y-scale)
                                   (.ticks 4))))))}
