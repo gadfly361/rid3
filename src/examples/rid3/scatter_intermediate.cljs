@@ -55,7 +55,7 @@
         labels            (mapv :label dataset)]
     (-> js/d3
         .scaleBand
-        (.rangeRound #js [0 width])
+        (.range #js [0 width])
         (.padding 0.1)
         (.domain (clj->js labels)))))
 
@@ -135,9 +135,10 @@
       (rid3-> node
               {:r    4
                :fill "#3366CC"
-               :cx   (fn [d]
-                       (let [label (gobj/get d "label")]
-                         (x-scale label)))})
+               :cx (fn [d]
+                     (let [label (gobj/get d "label")]
+                       (+ (x-scale label)
+                          (/ (.bandwidth x-scale) 2))))})
 
       (if did-mount?
         ;; did-mount
@@ -193,7 +194,7 @@
                             (rid3-> node
                                     {:transform (translate
                                                  (get margin :left)
-                                                 (get margin :right))}))}
+                                                 (get margin :top))}))}
          :pieces
          [{:kind      :container
            :class     "x-axis"

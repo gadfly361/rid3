@@ -188,7 +188,7 @@
                             (rid3-> node
                                     {:transform (translate
                                                  (get margin :left)
-                                                 (get margin :right))}))}
+                                                 (get margin :top))}))}
          :pieces
          [{:kind      :container
            :class     "x-axis"
