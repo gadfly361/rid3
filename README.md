@@ -38,6 +38,7 @@ The `viz` component takes a hash-map of the following:
 | :svg             | svg                |                                                 | yes       |
 | :main-container  | main-container     |                                                 | no        |
 | :pieces          | [ piece ]          |                                                 | no        |
+| :class           | string             |                                                 | no        |
 
 - an `:id` is required to differentiate between different rid3's
 - a `:ratom` can be a reagent atom, reagent cursor, or a re-frame subscription. This should be used to store all of the data relevant to your rid3.
