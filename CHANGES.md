@@ -1,5 +1,9 @@
 # Changes
 
+## 0.2.2 (2020-04-11)
+
+- Add top-level `:class` field to viz component.
+
 ## 0.2.1-1 (2018-03-05)
 
 - Same as 0.2.1, but made functions public
