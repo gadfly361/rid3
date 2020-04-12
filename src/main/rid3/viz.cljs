@@ -8,9 +8,10 @@
 
 (defn component-render [opts]
   (let [{:keys [id
-                ratom]} opts
+                ratom
+                class]} opts
         _trigger-update @ratom]
-    [:div {:id id}]))
+    [:div {:id id :class class}]))
 
 
 (defn component-did-mount [opts]
