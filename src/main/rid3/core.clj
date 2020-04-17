@@ -15,3 +15,10 @@
   `(this-is this#
             (rid3-> (.select d3 this#)
                     ~@forms)))
+
+(defmacro rid3on->2 [node attr & forms]
+  `(.on ~node ~attr
+        (fn [d i]
+          (this-as this
+                   (rid3-> (.select d3 this)
+                           ~@forms)))))
