@@ -10,3 +10,8 @@
                          forms)]
     `(-> ~node
          ~@forms-sanitized)))
+
+(defmacro rid3on-> [& forms]
+  `(this-is this#
+            (rid3-> (.select d3 this#)
+                    ~@forms)))
